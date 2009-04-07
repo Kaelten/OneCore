@@ -1,4 +1,4 @@
---- '''OneFrame.lua''' provies frame creation and handling code for OneSuite
+--- **OneFrame.lua** provies frame creation and handling code for OneSuite
 -- @class file
 -- @name OneFrame.lua
 local MAJOR, MINOR = "OneFrame-1.0", 0

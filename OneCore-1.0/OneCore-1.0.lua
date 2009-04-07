@@ -1,4 +1,4 @@
---- '''OneCore-3.0''' provides common code used by the onebag suite
+--- **OneCore-1.0** provides common code used by the onebag suite
 -- @class file
 -- @name OneCore-1.0.lua
 local MAJOR, MINOR = "OneCore-1.0", 0
