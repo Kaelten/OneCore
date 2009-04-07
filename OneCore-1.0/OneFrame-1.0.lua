@@ -136,7 +136,7 @@ end
 --- Creates a small money frame that's slightly customized
 -- @param framename the name used when creating the moneyframe
 -- @param parent the frame this moneyframe will belong to
--- @param the type of money frame we're making
+-- @param type the type of money frame we're making
 function OneFrame:CreateSmallMoneyFrame(framename, parent, type)
 	local moneyframe = CreateFrame("Frame", parent:GetName()..framename, parent, "SmallMoneyFrameTemplate")
 
@@ -184,7 +184,9 @@ function OneFrame:CreateSideBar(framename, parent, width, height)
 	return sidebar
 end            
 
---- Creates a main frame, complete with fixins and widgets and stuff.
+--- Creates a main frame, complete with fixins and widgets and stuff.   
+-- @param framename the name of the frame, passed into CreateFrame
+-- @moneyType the type of moneyframe to use on this frame.
 function OneFrame:CreateMainFrame(framename, moneyType)
 	local frame = self:CreateBaseFrame(framename)
 	
