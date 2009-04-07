@@ -1,8 +1,8 @@
 -
-type: luadoc
-input-files: "OneCore-1.0/*.lua"
-output-directory: API                                                  
+    type: luadoc
+    input-files: "OneCore-1.0/*.lua"
+    output-directory: API                                                  
 -
-type: creole
-input-file: wiki/Main
-output-page: "Main"
+    type: creole
+    input-file: wiki/Main
+    output-page: "Main"
