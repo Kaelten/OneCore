@@ -55,7 +55,7 @@ function FrameHelpers:SetSize(width, height)
 end
 
 --- Wrapper for setting of position, will also ClearAllPoints first
--- @param positionTable represents a position
+-- @param position represents a position
 -- @usage
 -- -- Only parent is required, all other values are defaults
 -- frame:SetPosition({ parent=frame, attachAt="TOPLEFT", attachTo="TOPRIGHT", left=0, top=0 })
