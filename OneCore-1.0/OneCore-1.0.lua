@@ -353,7 +353,7 @@ function OneCore:GetSlotOrder()
     -- for testing
     local slots = {}
     local self = self
-    local start, stop, step = #self.bagIndexes, 1, -1
+    local start, stop, step = 1, #self.bagIndexes, 1
 
     for i=start, stop, step do
         bagid = self.bagIndexes[i]
