@@ -71,7 +71,7 @@ function OneConfig:InitializeConfiguration()
 									order = 5, 
 									type = "range",
 									name = L["Number of Columns"],
-									desc = "Sets the maximum number of columns to use",
+									desc = L["Sets the maximum number of columns to use"],
 									min = 1, max = 30, step = 1,
 									get = function(info)
 										return self.db.profile.appearance.cols
@@ -89,7 +89,7 @@ function OneConfig:InitializeConfiguration()
 								scale = {
 									order = 15,
 									type = "range",
-									name = "UI Scale",
+									name = L["UI Scale"],
 									min = 0.5,
 									max = 3,
 									step = 0.01,
@@ -104,7 +104,7 @@ function OneConfig:InitializeConfiguration()
 								alpha = {
 									order = 20,
 									type = "range",
-									name = "Frame Alpha",
+									name = L["Frame Alpha"],
 									min = 0,
 									max = 1,
 									step = 0.01,
@@ -124,8 +124,8 @@ function OneConfig:InitializeConfiguration()
 								background = { 
 					                order = 30, 
 					                type = "color", 
-					                name = "Background",
-					 				desc = "Sets the background color of your bag.",
+					                name = L["Background"],
+					 				desc = L["Sets the background color of your bag."],
 									get = function(info) 
 										local color = self.db.profile.colors.background
 										return color.r, color.g, color.b, color.a
@@ -139,8 +139,8 @@ function OneConfig:InitializeConfiguration()
 								mouseover = { 
 					                order = 35, 
 					                type = "color", 
-					                name = "Mouseover",
-					 				desc = "Sets the border color of highlighted slots when you mouse over a bag.",
+					                name = L["Mouseover"],
+					 				desc = L["Sets the border color of highlighted slots when you mouse over a bag."],
 									get = function(info) 
 										local color = self.db.profile.colors.mouseover
 										return color.r, color.g, color.b, color.a
@@ -176,8 +176,8 @@ function OneConfig:InitializeConfiguration()
 								locked = {
 									order = 5,
 									type = "toggle",
-									name = "Lock Frame",
-									desc = "Toggles if the frame is movable or not",
+									name = L["Lock Frame"],
+									desc = L["Toggles if the frame is movable or not"],
 									get = function(info)
 										return self.db.profile.behavior.locked
 									end,
@@ -188,8 +188,8 @@ function OneConfig:InitializeConfiguration()
 								clamped = {
 									order = 10,
 									type = "toggle",
-									name = "Clamp to Screen",
-									desc = "Toggles if you can drag the frame off screen.",
+									name = L["Clamp to Screen"],
+									desc = L["Toggles if you can drag the frame off screen."],
 									get = function(info)
 										return self.db.profile.behavior.clamped
 									end,
@@ -201,7 +201,7 @@ function OneConfig:InitializeConfiguration()
 								strata = {
 									order = 15, 
 									type = "range",
-									name = "Frame Strata",
+									name = L["Frame Strata"],
 									min = 1,
 									max = 5,
 									step = 1,
@@ -216,7 +216,7 @@ function OneConfig:InitializeConfiguration()
 								alpha = {
 									order = 20,
 									type = "range",
-									name = "Frame Alpha",
+									name = L["Frame Alpha"],
 									min = 0,
 									max = 1,
 									step = 0.05,
@@ -231,7 +231,7 @@ function OneConfig:InitializeConfiguration()
 								scale = {
 									order = 25,
 									type = "range",
-									name = "UI Scale",
+									name = L["UI Scale"],
 									min = 0.5,
 									max = 3,
 									step = 0.05,
@@ -261,8 +261,8 @@ function OneConfig:InitializeConfiguration()
 								cols = {
 									order = 10, 
 									type = "range",
-									name = "Number of Columns",
-									desc = "Sets the maximum number of columns to use",
+									name = L["Number of Columns"],
+									desc = L["Sets the maximum number of columns to use"],
 									min = 1, max = 32, step = 1,
 									get = function(info)
 										return self.db.profile.appearance.cols
@@ -289,8 +289,8 @@ function OneConfig:InitializeConfiguration()
 								background = { 
 					                order = 5, 
 					                type = "color", 
-					                name = "Background",
-					 				desc = "Sets the background color of your bag.",
+					                name = L["Background"],
+					 				desc = L["Sets the background color of your bag."],
 									get = function(info) 
 										local color = self.db.profile.colors.background
 										return color.r, color.g, color.b, color.a
@@ -304,8 +304,8 @@ function OneConfig:InitializeConfiguration()
 								mouseover = { 
 					                order = 10, 
 					                type = "color", 
-					                name = "Mouseover",
-					 				desc = "Sets the border color of highlighted slots when you mouse over a bag.",
+					                name = L["Mouseover"],
+					 				desc = L["Sets the border color of highlighted slots when you mouse over a bag."],
 									get = function(info) 
 										local color = self.db.profile.colors.mouseover
 										return color.r, color.g, color.b, color.a
@@ -317,7 +317,7 @@ function OneConfig:InitializeConfiguration()
 								glow = {
 									order = 15,
 									type = "toggle",
-									name = "Use Glow Borders",
+									name = L["Use Glow Borders"],
 									desc = L["Glow Borders are a little brighter and 'shinier' than the default ones."],
 									get = function(info)
 										return self.db.profile.appearance.glow
@@ -338,8 +338,8 @@ function OneConfig:InitializeConfiguration()
 								rarity = {
 									order = 10,
 									type = "toggle",
-									name = "Use Rarity Borders",
-									desc = "Toggles if a slot's border should be highlighted based on an items rarity.",
+									name = L["Use Rarity Borders"],
+									desc = L["Toggles if a slot's border should be highlighted based on an items rarity."],
 									get = function(info)
 										return self.db.profile.appearance.rarity
 									end,
@@ -351,8 +351,8 @@ function OneConfig:InitializeConfiguration()
 								lowlevel = {
 									order = 15,
 									type = "toggle",
-									name = "Color Low Level Items",
-									desc = "Toggles if you want to color white and grey item's borders as well.",
+									name = L["Color Low Level Items"],
+									desc = L["Toggles if you want to color white and grey item's borders as well."],
 									get = function(info)
 										return self.db.profile.appearance.lowlevel
 									end,
@@ -372,8 +372,8 @@ function OneConfig:InitializeConfiguration()
 								ammo = { 
 					                order = 5, 
 					                type = "color", 
-					                name = "Ammo Bags",
-					 				desc = "Sets the border color of ammo bag slots.",
+					                name = L["Ammo Bags"],
+					 				desc = L["Sets the border color of ammo bag slots."],
 									get = function(info) 
 										local color = self.db.profile.colors.ammo
 										return color.r, color.g, color.b, color.a
@@ -386,8 +386,8 @@ function OneConfig:InitializeConfiguration()
 								soul = { 
 					                order = 10, 
 					                type = "color", 
-					                name = "Soul Bags",
-					 				desc = "Sets the border color of soul bag slots.",
+					                name = L["Soul Bags"],
+					 				desc = L["Sets the border color of soul bag slots."],
 									get = function(info) 
 										local color = self.db.profile.colors.soul
 										return color.r, color.g, color.b, color.a
@@ -400,8 +400,8 @@ function OneConfig:InitializeConfiguration()
 								profession = { 
 					                order = 15, 
 					                type = "color", 
-					                name = "Profession Bags",
-					 				desc = "Sets the border color of profession bag slots.",
+					                name = L["Profession Bags"],
+					 				desc = L["Sets the border color of profession bag slots."],
 									get = function(info) 
 										local color = self.db.profile.colors.profession
 										return color.r, color.g, color.b, color.a
@@ -421,7 +421,7 @@ function OneConfig:InitializeConfiguration()
 					args = {
 						description = {
 							type = 'description',
-							name = 'These options allow you to stop certain bags from displaying.',
+							name = L['These options allow you to stop certain bags from displaying.'],
 							order = 1
 						},
 						type = {
@@ -433,8 +433,8 @@ function OneConfig:InitializeConfiguration()
 								ammo = {
 									order = 15,
 									type = "toggle",
-									name = "Ammo Bags & Quivers",
-									desc = "Toggles the display of ammo bags and quivers.",
+									name = L["Ammo Bags & Quivers"],
+									desc = L["Toggles the display of ammo bags and quivers."],
 									get = function(info)
 										return self.db.profile.show.ammo
 									end,
@@ -446,8 +446,8 @@ function OneConfig:InitializeConfiguration()
 								soul = {
 									order = 10,
 									type = "toggle",
-									name = "Soul Bags",
-									desc = "Toggles the display of soul bags.",
+									name = L["Soul Bags"],
+									desc = L["Toggles the display of soul bags."],
 									get = function(info)
 										return self.db.profile.show.soul
 									end,
@@ -459,8 +459,8 @@ function OneConfig:InitializeConfiguration()
 								profession = {
 									order = 5,
 									type = "toggle",
-									name = "Profession Bags",
-									desc = "Toggles the display of profession bags.",
+									name = L["Profession Bags"],
+									desc = L["Toggles the display of profession bags."],
 									get = function(info)
 										return self.db.profile.show.profession
 									end,
@@ -475,7 +475,7 @@ function OneConfig:InitializeConfiguration()
 				},
 				plugins = {
 					type = "group",
-					name = "Plugins",
+					name = L["Plugins"],
 					args = {
 					}
 				},
@@ -520,10 +520,10 @@ function OneConfig:InitializeConfiguration()
 	
 	self.configs.base = baseconfig
 	self.configs.main = AceConfigDialog:AddToBlizOptions(self.displayName, nil, nil, 'general')
-	self.configs.frame = AceConfigDialog:AddToBlizOptions(self.displayName, "Frame Options", self.displayName, 'frame')
-	self.configs.colors = AceConfigDialog:AddToBlizOptions(self.displayName, "Color Options", self.displayName, 'colors')
-	self.configs.showbags = AceConfigDialog:AddToBlizOptions(self.displayName, "Bag Visibility", self.displayName, 'showbags')
-	self.configs.plugins = AceConfigDialog:AddToBlizOptions(self.displayName, "Plugins", self.displayName, 'plugins')
+	self.configs.frame = AceConfigDialog:AddToBlizOptions(self.displayName, L["Frame Options"], self.displayName, 'frame')
+	self.configs.colors = AceConfigDialog:AddToBlizOptions(self.displayName, L["Color Options"], self.displayName, 'colors')
+	self.configs.showbags = AceConfigDialog:AddToBlizOptions(self.displayName, L["Bag Visibility"], self.displayName, 'showbags')
+	self.configs.plugins = AceConfigDialog:AddToBlizOptions(self.displayName, L["Plugins"], self.displayName, 'plugins')
 end
 
 function OneConfig:OpenConfig()
