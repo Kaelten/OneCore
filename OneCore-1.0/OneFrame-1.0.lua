@@ -186,7 +186,7 @@ end
 
 --- Creates a main frame, complete with fixins and widgets and stuff.   
 -- @param framename the name of the frame, passed into CreateFrame
--- @moneyType the type of moneyframe to use on this frame.
+-- @param moneyType the type of moneyframe to use on this frame.
 function OneFrame:CreateMainFrame(framename, moneyType)
 	local frame = self:CreateBaseFrame(framename)
 	
