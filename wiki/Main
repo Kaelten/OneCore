@@ -1,0 +1,16 @@
+OneCore is a common library used by OneBag and it's related addons.
+
+=== Purpose
+
+OneBag and it's related addons have always been about sharing as much code as possible.  This library was in fact embedded in previous versions of OneBag.  I've decided to break it out into it's own project to improve the structure of OneBag's code and speed future development.  
+
+This library currently provides OneBag's:
+* Frame Creation Code
+* Layout management
+* Base Configuration options
+* Locale information
+* Slot coloring routines
+* Helper mixins for Slots, Bags, and Frames
+* And more!(tm)                                                                 
+               
+In the near future, when I reintroduce the plugin architecture the standard plugins will also be part of this library.
