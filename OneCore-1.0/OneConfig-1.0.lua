@@ -34,7 +34,7 @@ local function setup_embed_and_upgrade(lib, store, mixins)
     end
 end
 
-
+--- This will create the common config and pass it around for customization before installing it in blizzard options
 function OneConfig:InitializeConfiguration()
     local AceConfig = LibStub("AceConfig-3.0")
     local AceConfigDialog = LibStub("AceConfigDialog-3.0")
@@ -526,6 +526,7 @@ function OneConfig:InitializeConfiguration()
 	self.configs.plugins = AceConfigDialog:AddToBlizOptions(self.displayName, L["Plugins"], self.displayName, 'plugins')
 end
 
+--- Opens the configuration panel expanded so you see the sub options in the treeview
 function OneConfig:OpenConfig()
 	InterfaceOptionsFrame_OpenToCategory(self.configs.showbags)
 	InterfaceOptionsFrame_OpenToCategory(self.configs.main)
