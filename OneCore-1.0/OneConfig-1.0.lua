@@ -53,7 +53,7 @@ function OneConfig:InitializeConfiguration()
 					args = {
 						desc1 = {
 							type = "description",
-							name = L["Overview Description"]:format(self.displayName),
+							name = L["%s collapses all of the related bags into one frame.  In addition to this it provides colored slot highlights, customizable display, behavior enhancements, and more.  In addition plugins can provide a variety of more advanced functionality."]:format(self.displayName),
 							order = 1,
 						},
 						heading = {
@@ -64,7 +64,7 @@ function OneConfig:InitializeConfiguration()
 							args = {
 								desc1 = {
 									type = "description",
-									name = L["Description of Cols"],
+									name = L["You can adjust how wide you wish your bag to be.  Note, this is considered a maxinum size.  If you don't have enough slots you will only see as many as you have."],
 									order = 1
 								},
 								cols = {
@@ -83,7 +83,7 @@ function OneConfig:InitializeConfiguration()
 								},
 								desc2 = {
 									type = "description",
-									name = L["Description of Scale and Alpha"],
+									name = L["You may also adjust some of the characteristics of your bag window.  UI Scale refers to how large the window is while Frame Alpha talks about the overall frame's opacity.  Note that the background transparancy is controlled via the background color."],
 									order = 10
 								},
 								scale = {
@@ -119,7 +119,7 @@ function OneConfig:InitializeConfiguration()
 								desc3 = {
 									order = 25,
 									type = "description",
-									name = L["Description of Colors"],
+									name = L["There are several customizable colors with regards to your bags.  Each one will control something different."],
 								},
 								background = { 
 					                order = 30, 
@@ -153,7 +153,7 @@ function OneConfig:InitializeConfiguration()
 						},
 						desc2 = {
 							type = "description",
-							name = L["Overview Closing"]:format(self.displayName),
+							name = L["There are also many other options available to you in the subpanels.  If you find this addon useful I ask that you tell your friends and give me feedback on how to make it better.  \n\nPlease check out the side panel under %s to find all the other options as well as plugin information."]:format(self.displayName),
 							order = 10,
 						},
 					}
@@ -171,7 +171,7 @@ function OneConfig:InitializeConfiguration()
 								description = {
 									order = 1,
 									type = "description",
-									name = L["Frame Behavior Description"],
+									name = L["These options affect how the frame itself behaves on your screen."],
 								},
 								locked = {
 									order = 5,
@@ -256,7 +256,7 @@ function OneConfig:InitializeConfiguration()
 								description = {
 									order = 1,
 									type = 'description',
-									name = L["Bag Behavior Description"]:format(self.displayName),
+									name = L["These options affect the way %s works with and treats your bags.  You can use them to do some base customization to the way you view your bags."]:format(self.displayName),
 								},
 								cols = {
 									order = 10, 
