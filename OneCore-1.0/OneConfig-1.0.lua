@@ -498,18 +498,17 @@ function OneConfig:InitializeConfiguration()
             order = pluginGroupCount,
             tristate = false,
             get = function(info, pluginName)
-                self:Print('getting', pluginName, self:GetPlugin(typeName, pluginName):IsEnabled())
                 return self:GetPlugin(typeName, pluginName):IsEnabled()
             end,
             set = function(info, pluginName, state)               
-                self:Print('setting', pluginName, state)
                 local plugin = self:GetPlugin(typeName, pluginName)
                                                                                   
                 if state then                      
                     self:EnablePlugin(plugin)
                 else
                     self:DisablePlugin(plugin)
-                end                                        
+                end                         
+                               
                 self:OrganizeFrame(true)
             end,
         }
