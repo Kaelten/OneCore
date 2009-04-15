@@ -235,7 +235,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	sidebarButton:SetScript("OnClick", function()
 		if sidebarButton:GetChecked() then
 			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
-			frame.sidebar:Show()
+			frame.sidebar:Show()  
 		else
 			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
 			frame.sidebar:Hide()

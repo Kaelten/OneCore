@@ -348,23 +348,21 @@ function OneCore:UnhighlightBagSlots(bagid)
 end
 
 --- This function returns the order of slots
-function OneCore:GetSlotOrder()             
-    
-    -- for testing
-    local slots = {}
-    local self = self
-    local start, stop, step = 1, #self.bagIndexes, 1
+function OneCore:GetSlotOrder()    
+    for name, plugin in self:IterateActivePluginsByType('sorting') do
+        return plugin:GetSlotOrder()
+    end
 
-    for i=start, stop, step do
-        bagid = self.bagIndexes[i]
+    return {}
+end                          
 
-        for slotid = 1, self.frame.bags[bagid].size do
-            table.insert(slots, self:GetSlot(bagid, slotid))
-        end 
-    end         
+--- Sets up the plugin types
+function OneCore:InitializePluginSystem()
+    self:NewPluginType('sorting')     
     
-    return slots
-end          
+    self.defaultSortPlugin = LibStub("OneSuite-SimpleSort-1.0"):LoadPluginForAddon(self)
+    
+end
 
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
@@ -381,7 +379,8 @@ setup_embed_and_upgrade(OneCore, "embeded", {
     "ColorManySlotBorders",
     "HighlightBagSlots",
     "UnhighlightBagSlots",
-    "GetSlotOrder",
+    "GetSlotOrder",   
+    "InitializePluginSystem",
     
     colWidth = 39,
     rowHeight = 39,

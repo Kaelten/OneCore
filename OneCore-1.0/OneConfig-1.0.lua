@@ -484,33 +484,39 @@ function OneConfig:InitializeConfiguration()
 	end
 	
 	baseconfig = GetBaseConfig()
-	
-    -- --Setup Plugin Groups
-    -- for pluginType, heading in pairs(self.pluginOptionsGroups) do 
-    --  local values = {}
-    --  for pluginName, plugin in pairs(self.plugins[pluginType]) do
-    --      values[pluginName] = ("%s: %s"):format(plugin.displayName or plugin.name, plugin.description)
-    --  end
-    --  
-    --  local pluginGroup = {
-    --      type = "multiselect", 
-    --      name = heading,
-    --      values = values,
-    --      order = pluginType / 256 + 1,
-    --      get = function(info, pluginName) 
-    --          return self.db.profile.plugins[pluginType] == pluginName
-    --      end,
-    --      set = function(info, pluginName, state)
-    --          if state then
-    --              self.db.profile.plugins[pluginType] = pluginName
-    --              self:EnablePlugins(pluginType, pluginName)
-    --              self:OrganizeFrame(true)
-    --          end
-    --      end,
-    --  }
-    --  
-    --  baseconfig.args.plugins.args[self.pluginTypeNames[pluginType]] = pluginGroup
-    -- end
+    local pluginGroupCount = 1
+	for typeName, _ in self:IteratePluginTypes() do                                          
+	    local values = {}
+        for pluginName, plugin in self:IteratePluginsByType(typeName) do
+            values[pluginName] = ("%s: %s"):format(plugin.pluginName, plugin.description or "")
+        end
+
+        local pluginGroup = {
+            type = "multiselect", 
+            name = typeName,
+            values = values,
+            order = pluginGroupCount,
+            tristate = false,
+            get = function(info, pluginName)
+                self:Print('getting', pluginName, self:GetPlugin(typeName, pluginName):IsEnabled())
+                return self:GetPlugin(typeName, pluginName):IsEnabled()
+            end,
+            set = function(info, pluginName, state)               
+                self:Print('setting', pluginName, state)
+                local plugin = self:GetPlugin(typeName, pluginName)
+                                                                                  
+                if state then                      
+                    self:EnablePlugin(plugin)
+                else
+                    self:DisablePlugin(plugin)
+                end                                        
+                self:OrganizeFrame(true)
+            end,
+        }
+     
+        baseconfig.args.plugins.args[typeName] = pluginGroup   
+        pluginGroupCount = pluginGroupCount + 1
+    end
 	
 	if self.LoadCustomConfig then
 		self:LoadCustomConfig(baseconfig)

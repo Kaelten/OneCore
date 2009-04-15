@@ -3,5 +3,8 @@
 
     <Script file="OneCore-1.0.lua" />
     <Script file="OneFrame-1.0.lua" />
-    <Script file="OneConfig-1.0.lua" />
+    <Script file="OneConfig-1.0.lua" />                           
+    <Script file="OnePlugin-1.0.lua" />
+    
+    <Script file="SimpleSort-1.0.lua" />
 </Ui>
