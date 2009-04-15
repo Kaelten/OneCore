@@ -44,7 +44,8 @@ end
 setup_load_embed_and_upgrade(SimpleSort, 'embeded', 'sorting', 'SimpleSort', {
     description = 'Very simple sort, just puts the slot in order.  This is the default sort.', 
     defaults = {        
-        profile = {
+        profile = {       
+            enabled = true,
             behavior = {
                 bagbreak = false,
                 valign = 1,
