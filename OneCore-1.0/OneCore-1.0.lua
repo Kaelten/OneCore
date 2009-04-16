@@ -1,7 +1,7 @@
 --- **OneCore-1.0** provides common code used by the onebag suite
 -- @class file
 -- @name OneCore-1.0.lua
-local MAJOR, MINOR = "OneCore-1.0", 1
+local MAJOR, MINOR = "OneCore-1.0", 2
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneCore then return end -- No Upgrade needed.

@@ -1,7 +1,7 @@
 --- **OneFrame.lua** provies frame creation and handling code for OneSuite
 -- @class file
 -- @name OneFrame.lua
-local MAJOR, MINOR = "OneFrame-1.0", 0
+local MAJOR, MINOR = "OneFrame-1.0", 1
 local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.

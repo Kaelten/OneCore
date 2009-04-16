@@ -1,7 +1,7 @@
 --- **OneConfig-1.0** provides a common config table, and framework for onebag's suite
 -- @class file
 -- @name OneConfig-1.0.lua
-local MAJOR, MINOR = "OneConfig-1.0", 0
+local MAJOR, MINOR = "OneConfig-1.0", 1
 local OneConfig, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneConfig then return end -- No Upgrade needed.
