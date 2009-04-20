@@ -473,11 +473,9 @@ setup_embed_and_upgrade(OneCore, "embeded", {
 				bagorder = 1,
 			},
 			position = { 
-			    attachAt = "BOTTOMRIGHT", 
-			    attachTo = "BOTTOMRIGHT",
 				parent = "UIParent",
-				left = -100,
-				top = 100,
+				left = 600,
+				top = 450,
 			},
 			plugins = {},
 		},

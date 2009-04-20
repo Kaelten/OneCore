@@ -64,7 +64,7 @@ function FrameHelpers:SetPosition(position)
     parent = type(position.parent) == "string" and getglobal(position.parent) or position.parent
     
 	self:ClearAllPoints()
-	self:SetPoint(position.attachAt or "TOPLEFT", parent, position.attachTo or "TOPRIGHT", position.left or 0, position.top or 0)
+	self:SetPoint(position.attachAt or "TOPLEFT", parent, position.attachTo or "BOTTOMLEFT", position.left or 0, position.top or 0)
 end            
 
 --- Gets the current positionTable of the frame, returns a string for parent
@@ -72,7 +72,7 @@ function FrameHelpers:GetPosition()
 	return {
 		top = self:GetTop(),
 		left = self:GetLeft(),
-		parent = self:GetParent():GetName(),
+		parent = self:GetParent():GetName(), 
 	}
 end
 
