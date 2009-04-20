@@ -1,7 +1,7 @@
 --- **OneFrame.lua** provies frame creation and handling code for OneSuite
 -- @class file
 -- @name OneFrame.lua
-local MAJOR, MINOR = "OneFrame-1.0", 1
+local MAJOR, MINOR = "OneFrame-1.0", tonumber("@project-revision@") or 9999
 local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.
@@ -250,7 +250,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	frame.name = name
 	
 	local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
-	closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+	closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, -5)
 	frame.closeButton = closeButton
 	
 	local configButton = CreateFrame('Button', nil, frame, "UIPanelButtonTemplate")
@@ -264,8 +264,68 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 		frame.handler:OpenConfig()
 	end)
 	
+	frame.configButton = configButton
+    
+    frame.childrenFrames = {}
+	
 	return frame
-end          
+end 
+
+--- Creates a keyring button
+function OneFrame:CreateKeyringButton(parent)
+    local button = CreateFrame("CheckButton", parent:GetName().."KeyringButton", parent)
+
+    button:SetHeight(39)
+    button:SetWidth(18)
+    
+    button:SetScript("OnClick", function()
+    	if (CursorHasItem()) then
+    		PutKeyInKeyRing()
+    	else
+    		ToggleKeyRing()
+    	end
+    end)
+    
+    button:SetScript("OnReceiveDrag", function()
+        if (CursorHasItem()) then
+            PutKeyInKeyRing()
+	    end
+    end)
+    
+    button:SetScript("OnEnter", function()
+    	GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+    	GameTooltip:SetText(KEYRING, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+    	GameTooltip:AddLine()
+    end)         
+    
+    button:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)                                                    
+    
+	button:SetID(KEYRING_CONTAINER)
+	button:RegisterForClicks("LeftButtonUp", "RightButtonUp") 
+	
+    function createTexture(path, mode, left, right, top, bottom)
+        local texture = button:CreateTexture(path, "OVERLAY")
+        texture:SetTexture(path)
+        texture:SetTexCoord(left, right, top, bottom) 
+        
+        if mode then
+            texture:SetBlendMode(mode)
+        end
+        
+        return texture
+    end
+	                        
+	button:SetNormalTexture([[Interface\Buttons\UI-Button-KeyRing]])
+	button:SetHighlightTexture([[Interface\Buttons\UI-Button-KeyRing-Highlight]])
+	button:SetPushedTexture([[Interface\Buttons\UI-Button-KeyRing-Down]])
+--	button:SetNormalTexture(createTexture([[Interface\Buttons\UI-Button-KeyRing]], nil, 0, 0.5625, 0, 0.609375))
+--	button:SetHighlightTexture(createTexture([], "ADD", 0, 0.5625, 0, 0.609375))
+--	button:SetPushedTexture(createTexture([[Interface\Buttons\UI-Button-KeyRing-Down]], nil, 0, 0.5625, 0, 0.609375))	                                                                                                            
+	
+	return button
+end         
 
 setup_embed_and_upgrade(OneFrame, "embeded", {     
     "CreateFontString",
@@ -273,4 +333,5 @@ setup_embed_and_upgrade(OneFrame, "embeded", {
     "CreateBaseFrame",
     "CreateSideBar",   
     "CreateMainFrame",
+    "CreateKeyringButton"
 })

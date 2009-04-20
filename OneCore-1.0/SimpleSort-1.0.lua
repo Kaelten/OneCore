@@ -1,7 +1,7 @@
 --- **OneSuite-SimpleSort-1.0** provides a simple sort plugin for the OneSuite
 -- @class file
 -- @name SimpleSort-1.0.lua
-local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", 0
+local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", tonumber("@project-revision@") or 9999
 local SimpleSort, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not SimpleSort then return end -- No Upgrade needed.
@@ -84,14 +84,18 @@ function SimpleSort:OnEnable()
         self:SetEnabledState(false)
         return false
     end
-
-    self:LoadCustomConfig(self.pluginFor.configs.base)
+    
+    if self.pluginFor.configs then
+        self:LoadCustomConfig(self.pluginFor.configs.base)
+    end
     
     return true
 end                        
 
 function SimpleSort:OnDisable()
-    self:UnloadCustomConfig(self.pluginFor.configs.base)
+    if self.pluginFor.configs then
+        self:UnloadCustomConfig(self.pluginFor.configs.base)
+    end
 end
 
 function SimpleSort:LoadCustomConfig(baseconfig)

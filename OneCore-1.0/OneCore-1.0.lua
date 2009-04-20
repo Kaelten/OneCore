@@ -1,7 +1,7 @@
 --- **OneCore-1.0** provides common code used by the onebag suite
 -- @class file
 -- @name OneCore-1.0.lua
-local MAJOR, MINOR = "OneCore-1.0", 2
+local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-revision@") or 9999
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneCore then return end -- No Upgrade needed.
@@ -139,7 +139,7 @@ end
 --- This function is responsible for creating all the children of the frame, this makes lazy creation possible
 function OneCore:BuildFrame()
 	for _, bag in pairs(self.bagIndexes) do
-		local size = GetContainerNumSlots(bag)
+		local size = self:GetContainerNumSlots(bag)
 		local bagType = select(2, GetContainerNumFreeSlots(bag))
 		
 		if not self.frame.bags then
@@ -175,7 +175,7 @@ function OneCore:OrganizeFrame(force)
 		return 
 	end
 	
-	local cols, curCol, curRow, maxCol, justinc = self.db.profile.appearance.cols, 1, 1, 0, false
+	local cols, curCol, curRow, maxCol, justinc = self.forcedCols or self.db.profile.appearance.cols, 1, 1, 0, false
 	
 	for slotkey, slot in pairs(self.frame.slots) do
 		slot:Hide()
@@ -237,6 +237,12 @@ function OneCore:UpdateFrame()
 	for _, bag in pairs(self.bagIndexes) do
 		self:UpdateBag(bag)
 	end
+	
+	for _, childFrame in pairs(self.frame.childrenFrames) do 
+	    if childFrame:IsVisible() and childFrame.handler and childFrame.handler.UpdateFrame then
+            childFrame.handler:UpdateFrame()
+        end
+	end	
 end    
 
 --- Helper function that returns a single slot
@@ -361,7 +367,32 @@ function OneCore:InitializePluginSystem()
     self:NewPluginType('sorting')     
     
     self.defaultSortPlugin = LibStub("OneSuite-SimpleSort-1.0"):LoadPluginForAddon(self)
-    
+end
+                                                                                        
+--- Replacement for GetContainerNumSlots
+function OneCore:GetContainerNumSlots(bagId)
+    if bagId == KEYRING_CONTAINER then
+        local numKeyringSlots = _G.GetContainerNumSlots(KEYRING_CONTAINER);
+        local maxSlotNumberFilled = 0;
+        for i=1, numKeyringSlots do
+            local texture = GetContainerItemInfo(KEYRING_CONTAINER, i);
+            if ( texture and i > maxSlotNumberFilled) then
+                maxSlotNumberFilled = i;
+            end
+        end
+
+        -- Round to the nearest 4 rows that will hold the keys
+        local modulo = maxSlotNumberFilled % 4;
+        local size = maxSlotNumberFilled + (4 - modulo);
+        if ( modulo == 3 ) then
+            size = size + 4;
+        end
+        size = min(size, numKeyringSlots);
+
+        return size;
+    else
+        return _G.GetContainerNumSlots(bagId)
+    end    
 end
 
 
@@ -380,7 +411,8 @@ setup_embed_and_upgrade(OneCore, "embeded", {
     "HighlightBagSlots",
     "UnhighlightBagSlots",
     "GetSlotOrder",   
-    "InitializePluginSystem",
+    "InitializePluginSystem",   
+    "GetContainerNumSlots",
     
     colWidth = 39,
     rowHeight = 39,
