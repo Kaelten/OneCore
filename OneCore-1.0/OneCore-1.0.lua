@@ -393,8 +393,13 @@ function OneCore:GetContainerNumSlots(bagId)
     else
         return _G.GetContainerNumSlots(bagId)
     end    
+end                         
+   
+--- Updates a slot's locked status.
+function OneCore:UpdateItemLock(event, bag, slot)
+    local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot);
+    SetItemButtonDesaturated(self:GetSlot(bag, slot), locked, 0.5, 0.5, 0.5);
 end
-
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
 -- It's important that anything included this way doesn't need to be upgraded, as embedding just forces these values.
@@ -413,6 +418,7 @@ setup_embed_and_upgrade(OneCore, "embeded", {
     "GetSlotOrder",   
     "InitializePluginSystem",   
     "GetContainerNumSlots",
+    "UpdateItemLock",
     
     colWidth = 39,
     rowHeight = 39,
