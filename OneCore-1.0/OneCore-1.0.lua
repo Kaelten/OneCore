@@ -401,7 +401,11 @@ end
 -- @param event the event fired
 -- @param bagid the numeric id of the bag
 -- @param slotid the numeric id of the slot
-function OneCore:UpdateItemLock(event, bagid, slotid)
+function OneCore:UpdateItemLock(event, bagid, slotid)  
+    if bagid == nil or slotid == nil then
+        return
+    end       
+
     local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bagid, slotid);
     SetItemButtonDesaturated(self:GetSlot(bagid, slotid), locked, 0.5, 0.5, 0.5);
 end
