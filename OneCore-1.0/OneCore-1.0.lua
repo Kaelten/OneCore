@@ -207,7 +207,9 @@ function OneCore:OrganizeFrame(force)
 	if not justinc then curRow = curRow + 1 end
 	self.frame:SetHeight(curRow * self.rowHeight + self.bottomBorder + self.topBorder) 
 	self.frame:SetWidth(maxCol * self.colWidth + self.leftBorder + self.rightBorder)
-	
+
+	self.frame:SetPosition(self.db.profile.position)	
+
 	self.doOrganization = false
 end
                 
@@ -470,10 +472,12 @@ setup_embed_and_upgrade(OneCore, "embeded", {
 				valign = 1,
 				bagorder = 1,
 			},
-			position = {
+			position = { 
+			    attachAt = "BOTTOMRIGHT", 
+			    attachTo = "BOTTOMRIGHT",
 				parent = "UIParent",
-				top = 500,
-				left = 300
+				left = -100,
+				top = 100,
 			},
 			plugins = {},
 		},
