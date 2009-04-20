@@ -396,9 +396,12 @@ function OneCore:GetContainerNumSlots(bagId)
 end                         
    
 --- Updates a slot's locked status.
-function OneCore:UpdateItemLock(event, bag, slot)
-    local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot);
-    SetItemButtonDesaturated(self:GetSlot(bag, slot), locked, 0.5, 0.5, 0.5);
+-- @param event the event fired
+-- @param bagid the numeric id of the bag
+-- @param slotid the numeric id of the slot
+function OneCore:UpdateItemLock(event, bagid, slotid)
+    local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bagid, slotid);
+    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), locked, 0.5, 0.5, 0.5);
 end
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
