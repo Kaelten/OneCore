@@ -72,7 +72,7 @@ function FrameHelpers:GetPosition()
 	return {
 		top = self:GetTop(),
 		left = self:GetLeft(),
-		parent = self:GetParent():GetName(), 
+		parent = self:GetParent():GetName(),    
 	}
 end
 
@@ -215,7 +215,8 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	frame:SetScript("OnDragStop", function()
 		frame:StopMovingOrSizing(self)
         if frame.isMoving then
-            frame.handler.db.profile.position = frame:GetPosition()
+            frame.handler.db.profile.position = frame:GetPosition() 
+            frame.handler.db.profile.moved = true
             for _, slot in pairs(frame.slots) do
 				slot:EnableMouse(true)
 			end
