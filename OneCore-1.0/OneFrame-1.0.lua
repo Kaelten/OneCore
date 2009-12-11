@@ -12,6 +12,16 @@ if not OneFrame then return end -- No Upgrade needed.
 -- @param mixins a table of what needs to be mixed in    
 local function setup_embed_and_upgrade(lib, store, mixins)        
     
+    if lib.embeded then
+        lib.embedded = lib.embeded
+        lib.embeded = nil
+    end
+    
+    if lib.embededFrames then
+        lib.embeddedFrames = lib.embededFrames
+        lib.embededFrames = nil
+    end
+    
     lib[store] = lib[store] or {}
     store = lib[store]
     
@@ -104,7 +114,7 @@ function FrameHelpers:CustomizeFrame(db)
 	end
 end
     
-setup_embed_and_upgrade(FrameHelpers, "embededFrames", {   
+setup_embed_and_upgrade(FrameHelpers, "embeddedFrames", {   
     "stratas",
     "SetSize",
     "SetPosition",
@@ -328,7 +338,7 @@ function OneFrame:CreateKeyringButton(parent)
 	return button
 end         
 
-setup_embed_and_upgrade(OneFrame, "embeded", {     
+setup_embed_and_upgrade(OneFrame, "embedded", {     
     "CreateFontString",
     "CreateSmallMoneyFrame",
     "CreateBaseFrame",

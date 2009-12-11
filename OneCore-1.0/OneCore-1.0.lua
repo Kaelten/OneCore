@@ -14,6 +14,11 @@ if not OneCore then return end -- No Upgrade needed.
 -- @param mixins a table of what needs to be mixed in    
 local function setup_embed_and_upgrade(lib, store, mixins)        
     
+    if lib.embeded then
+        lib.embedded = lib.embeded
+        lib.embeded = nil
+    end
+    
     lib[store] = lib[store] or {}
     store = lib[store]
     
@@ -412,7 +417,7 @@ end
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
 -- It's important that anything included this way doesn't need to be upgraded, as embedding just forces these values.
-setup_embed_and_upgrade(OneCore, "embeded", {      
+setup_embed_and_upgrade(OneCore, "embedded", {      
     "CreateBagFrame",
     "CreateSlotFrame",
     "BuildFrame",    

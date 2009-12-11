@@ -5,12 +5,17 @@ local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", tonumber("@project-revision@") o
 local SimpleSort, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not SimpleSort then return end -- No Upgrade needed.
-                               
+if not oldminor then LibStub("OnePlugin-1.0"):RegisterPluginFactory(MAJOR, 'sorting') end
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
 -- @param store a table used to keep track of what was previously embedded, this is for upgrading.
 -- @param mixins a table of what needs to be mixed in    
 local function setup_load_embed_and_upgrade(lib, store, pluginType, pluginName, mixins)        
+    
+    if lib.embeded then
+        lib.embedded = lib.embeded
+        lib.embeded = nil
+    end
     
     lib[store] = lib[store] or {}
     store = lib[store]
@@ -41,7 +46,7 @@ local function setup_load_embed_and_upgrade(lib, store, pluginType, pluginName, 
     end
 end
    
-setup_load_embed_and_upgrade(SimpleSort, 'embeded', 'sorting', 'SimpleSort', {
+setup_load_embed_and_upgrade(SimpleSort, 'embedded', 'sorting', 'SimpleSort', {
     description = 'Very simple sort, just puts the slot in order.  This is the default sort.', 
     defaults = {        
         profile = {       

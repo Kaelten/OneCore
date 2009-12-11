@@ -60,7 +60,11 @@ end
 -- Yaye copy pasta from AceAddon /end
 
 -- Upgrading Library Variables
-OnePlugin.embeded = OnePlugin.embeded or {}
+OnePlugin.embedded = OnePlugin.embeded or OnePlugin.embedded or {}
+OnePlugin.__pluginFactories = OnePlugin.__pluginFactories or {}
+
+-- Refactoring Considerations
+OnePlugin.embeded = nil
 
 -- Usage sigs for the function error messages
 local usages = {
@@ -297,12 +301,12 @@ local mixins = {
     "DisablePlugin",
 }
 
-function OnePlugin:Embed( target )
-	for k, v in pairs( mixins ) do
+function OnePlugin:Embed(target)
+	for k, v in pairs(mixins) do
 		target[v] = self[v]
 	end                        
 	
-	self.embeded[target] = true
+	self.embedded[target] = true
 	
 	--Creating data storage on the target, upgrade safe.
 	target.__pluginTypes = target.__pluginTypes or {}   
@@ -315,7 +319,42 @@ function OnePlugin:Embed( target )
 	return target
 end
 
---- Upgrade our old embeded
-for target, v in pairs( OnePlugin.embeded ) do
-	OnePlugin:Embed( target )
+--- Upgrade our old embedded
+for target, v in pairs(OnePlugin.embedded) do
+	OnePlugin:Embed(target)
+end
+
+--- Regsiters a new plugin factory
+-- @params pluginFactoryMajor the MAJOR version of your pluginFactory
+-- @params pluginType the type of plugin this factory creates
+function OnePlugin:RegisterPluginFactory(pluginFactoryMajor, pluginType)
+    if not self.__pluginFactories[pluginType] then
+        self.__pluginFactories[pluginType] = {}
+    end
+    
+    self.__pluginFactories[pluginType][pluginFactoryMajor] = true
+    
+    update_initialized_addons(pluginFactoryMajor, pluginType)
+end
+
+local function update_initialized_addons(pluginFactoryMajor, pluginType)
+    for addon, _ in pairs(OnePlugin.embedded) do 
+        if addon.__pluginFactoriesInitialized and addon.__pluginTypes[pluginType] then
+           LibStub(pluginFactoryMajor):LoadPluginForAddon(addon) 
+        end
+    end
+end
+
+function OnePlugin:InitializePluginFactoriesForAddon(addon) 
+    if addon.__pluginFactoriesInitialized or not self.embedded[addon] then
+        return
+    end
+    
+    for pluginType, _ in addon:IteratePluginTypes() do
+        for pluginFactoryMajor, _ in pairs(self.__pluginFactories[pluginType]) do
+            LibStub(pluginFactoryMajor):LoadPluginForAddon(addon)
+        end
+    end
+    
+    addon.__pluginFactoriesInitialized = true
 end
