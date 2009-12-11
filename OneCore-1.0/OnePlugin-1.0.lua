@@ -334,13 +334,13 @@ function OnePlugin:RegisterPluginFactory(pluginFactoryMajor, pluginType)
     
     self.__pluginFactories[pluginType][pluginFactoryMajor] = true
     
-    update_initialized_addons(pluginFactoryMajor, pluginType)
+    --update_initialized_addons(pluginFactoryMajor, pluginType)
 end
 
 local function update_initialized_addons(pluginFactoryMajor, pluginType)
     for addon, _ in pairs(OnePlugin.embedded) do 
         if addon.__pluginFactoriesInitialized and addon.__pluginTypes[pluginType] then
-           LibStub(pluginFactoryMajor):LoadPluginForAddon(addon) 
+            LibStub(pluginFactoryMajor):LoadPluginForAddon(addon) 
         end
     end
 end
