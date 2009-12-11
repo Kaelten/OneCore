@@ -94,7 +94,7 @@ function OnePlugin:NewPlugin(type, name, ...)
         error(format("%s: 'type' - %s plugin type does not exist.", usages.NewPlugin, type), 2)
     end
     
-    if self.__pluginsByTypes[type][name] or (self.GetModule and self:GetModule(name, true)) then
+    if self.__pluginsByType[type][name] or (self.GetModule and self:GetModule(name, true)) then
         error(format("%s: 'name' - plugin '%s' already exists.", usages.NewPlugin, name), 2)
     end           
                           
@@ -117,7 +117,7 @@ function OnePlugin:NewPlugin(type, name, ...)
     plugin.pluginFor = self
 
     safecall(self.OnPluginCreated, type, name, plugin) 
-    self.__pluginsByTypes[type][name] = plugin
+    self.__pluginsByType[type][name] = plugin
     
     return plugin
 end                      
@@ -135,11 +135,11 @@ function OnePlugin:GetPlugin(type, name, silent)
         error(format("%s: 'type' - %s plugin type does not exist.", usages.NewPlugin, type), 2)
     end
 
-    if not self.__pluginsByTypes[type][name] and not silent then
+    if not self.__pluginsByType[type][name] and not silent then
         error(format("%s: 'name' - plugin '%s' does not exist.", usages.NewPlugin, name), 2)
     end                                           
     
-    return self.__pluginsByTypes[type] and self.__pluginsByTypes[type][name] or nil
+    return self.__pluginsByType[type] and self.__pluginsByType[type][name] or nil
 end
 
 --- Creates a new plugin type.  
@@ -166,7 +166,7 @@ function OnePlugin:NewPluginType(name, lowerLimit, upperLimit)
        },
    }    
    
-   self.__pluginsByTypes[name] = {}
+   self.__pluginsByType[name] = {}
                                                                     
    return setmetatable(self.__pluginTypes[name], ConfigurationMetatable)
 end
@@ -190,9 +190,10 @@ end
 --     self:Print(pluginName)
 -- end
 function OnePlugin:IteratePluginsByType(type)
-    return pairs(self.__pluginsByTypes[type])
+    return pairs(self.__pluginsByType[type])
 end 
 
+-- private iterator
 local function enabledIterator(plugins, name)
 	local name, plugin = next(plugins, name)
 	if name and not plugin:IsEnabled() then
@@ -203,8 +204,9 @@ local function enabledIterator(plugins, name)
 end
 
 --- Allows for iteration over the active plugins of a given type.
+-- @param type They plugin type you wish to iterate over
 function OnePlugin:IterateActivePluginsByType(type)
-    return enabledIterator, self.__pluginsByTypes[type], nil
+    return enabledIterator, self.__pluginsByType[type], nil
 end
 
 --- Returns the number of active plugins of a given type
@@ -233,14 +235,48 @@ function OnePlugin:SetBasePluginPrototype(prototype)
     self.__basePluginPrototypeMetatable = { __index = setmetatable(prototype, RuntimeMetatable) }   
 end                                               
                          
+--- Determines if a plugin can be legally enabled
+-- @param plugin The plugin you are checking on
+function OnePlugin:CanEnablePlugin(plugin)
+    local pluginType = plugin.pluginType
+    local upperLimit = self.__pluginTypes[pluginType].__pluginSettings.upperLimit
+    return upperLimit >= 0 and self:NumberActivePluginsOfType(plugin.pluginType) < upperLimit
+end
 
---- Enables a plugin
-function OnePlugin:EnablePlugin(plugin)
+--- Determines if a plugin can be legally disabled
+-- @param plugin The plugin you are checking on
+function OnePlugin:CanDisablePlugin(plugin)
+    local pluginType = plugin.pluginType
+    local lowerLimit = self.__pluginTypes[pluginType].__pluginSettings.lowerLimit
+    return lowerLimit >= 0 and self:NumberActivePluginsOfType(pluginType) > lowerLimit
+end
+
+--- Attempts to enable a plugin
+-- @param plugin The plugin you wish to enable
+function OnePlugin:EnablePlugin(plugin, force)
+    local pluginType = plugin.pluginType
+    local upperLimit = self.__pluginTypes[pluginType].__pluginSettings.upperLimit
+    local numberActive = self:NumberActivePluginsOfType(pluginType)
+    
+    if not force and upperLimit == 1 and numberActive == 1 then
+        for _, activePlugin in self:IterateActivePluginsByType(pluginType) do
+            self:DisablePlugin(activePlugin, true)
+        end
+    elseif not force and not self:CanEnablePlugin(plugin) then
+        return
+    end
+    
     plugin:SetEnabled(true)
     plugin:Enable()
 end                 
 
-function OnePlugin:DisablePlugin(plugin)
+--- Attempts to disable a plugin
+-- @param plugin The plugin you wish to disable
+function OnePlugin:DisablePlugin(plugin, force)
+    if not force and not self:CanDisablePlugin(plugin) then
+        return
+    end
+    
     plugin:SetEnabled(false)
     plugin:Disable()
 end
@@ -253,7 +289,10 @@ local mixins = {
     "IteratePluginTypes", 
     "IteratePluginsByType",  
     "IterateActivePluginsByType",
+    "NumberActivePluginsOfType",
     "SetBasePluginPrototype",
+    "CanEnablePlugin",
+    "CanDisablePlugin",
     "EnablePlugin",
     "DisablePlugin",
 }
@@ -267,8 +306,11 @@ function OnePlugin:Embed( target )
 	
 	--Creating data storage on the target, upgrade safe.
 	target.__pluginTypes = target.__pluginTypes or {}   
-	target.__pluginsByTypes = target.__pluginsByTypes or {}  
+	target.__pluginsByType = target.__pluginsByTypes or target.__pluginsByType or {}  
 	target.__basePluginPrototypeMetatable = target.__basePluginPrototypeMetatable 
+	
+	--Refactoring considerations
+	target.__pluginsByTypes = nil
 	
 	return target
 end
