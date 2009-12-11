@@ -366,7 +366,7 @@ end
 
 --- Sets up the plugin types
 function OneCore:InitializePluginSystem()
-    self:NewPluginType('sorting')     
+    self:NewPluginType('sorting', 1, 1)     
     
     self.defaultSortPlugin = LibStub("OneSuite-SimpleSort-1.0"):LoadPluginForAddon(self)
 end

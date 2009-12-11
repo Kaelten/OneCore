@@ -144,10 +144,12 @@ end
 
 --- Creates a new plugin type.  
 -- @note The plugin type information are stored on the table in which OnePlugin is embedded under __pluginTypes.
--- @param name Name of the plugin type                                                  
+-- @param name Name of the plugin type
+-- @param lowerLimit The mininium number of this type of plugins that must be enabled.
+-- @param upperLimit The max number of this type of plugins that can be enabled.                                                  
 -- @return a fresh dictionary that can be used to build a prototype for the plugin type.
 -- @usage local SortingPlugins = MyAddon:NewPluginType('plugin_type')
-function OnePlugin:NewPluginType(name)
+function OnePlugin:NewPluginType(name, lowerLimit, upperLimit)
     
     if not name then
        error(usages.NewPluginType, 2)
@@ -159,6 +161,8 @@ function OnePlugin:NewPluginType(name)
     
    self.__pluginTypes[name] = {
        __pluginSettings = {
+           ["lowerLimit"] = lowerLimit or -1,
+           ["upperLimit"] = upperLimit or -1,
        },
    }    
    
@@ -198,8 +202,21 @@ local function enabledIterator(plugins, name)
 	return name, plugin
 end
 
+--- Allows for iteration over the active plugins of a given type.
 function OnePlugin:IterateActivePluginsByType(type)
     return enabledIterator, self.__pluginsByTypes[type], nil
+end
+
+--- Returns the number of active plugins of a given type
+-- @return the number of active plugins of a given type
+-- @usage
+-- numberOfActivePlugins = MyAddon:NumberActivePluginsOfType('plugin_type')
+function OnePlugin:NumberActivePluginsOfType(type)
+    local count = 0
+    for _, _ in self:IterateActivePluginsByType(type) do
+        count = count + 1
+    end
+    return count
 end
 
 --- Sets a table as being a base prototype for all of your plugins.  
