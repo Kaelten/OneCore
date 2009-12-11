@@ -5,7 +5,7 @@ local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", tonumber("@project-revision@") o
 local SimpleSort, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not SimpleSort then return end -- No Upgrade needed.
-if not oldminor then LibStub("OnePlugin-1.0"):RegisterPluginFactory(MAJOR, 'sorting') end
+
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
 -- @param store a table used to keep track of what was previously embedded, this is for upgrading.
@@ -188,3 +188,5 @@ function SimpleSort:GetSlotOrder()
  
     return slots
 end                           
+
+if not oldminor then LibStub("OnePlugin-1.0"):RegisterPluginFactory(MAJOR, 'sorting') end

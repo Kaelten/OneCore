@@ -324,6 +324,14 @@ for target, v in pairs(OnePlugin.embedded) do
 	OnePlugin:Embed(target)
 end
 
+local function update_initialized_addons(pluginFactoryMajor, pluginType)
+    for addon, _ in pairs(OnePlugin.embedded) do 
+        if addon.__pluginFactoriesInitialized and addon.__pluginTypes[pluginType] then
+            LibStub(pluginFactoryMajor):LoadPluginForAddon(addon) 
+        end
+    end
+end
+
 --- Regsiters a new plugin factory
 -- @params pluginFactoryMajor the MAJOR version of your pluginFactory
 -- @params pluginType the type of plugin this factory creates
@@ -334,15 +342,7 @@ function OnePlugin:RegisterPluginFactory(pluginFactoryMajor, pluginType)
     
     self.__pluginFactories[pluginType][pluginFactoryMajor] = true
     
-    --update_initialized_addons(pluginFactoryMajor, pluginType)
-end
-
-local function update_initialized_addons(pluginFactoryMajor, pluginType)
-    for addon, _ in pairs(OnePlugin.embedded) do 
-        if addon.__pluginFactoriesInitialized and addon.__pluginTypes[pluginType] then
-            LibStub(pluginFactoryMajor):LoadPluginForAddon(addon) 
-        end
-    end
+    update_initialized_addons(pluginFactoryMajor, pluginType)
 end
 
 function OnePlugin:InitializePluginFactoriesForAddon(addon) 
