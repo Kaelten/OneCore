@@ -1,6 +1,6 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("OneCore-1.0", "frFR")
+local L = LibStub("AceLocale-3.1"):NewLocale("OneCore-1.0", "frFR")
 
-if L then 
+if L then
     --[===[@non-debug@
     @localization(locale="frFR", format="lua_additive_table")@
     --@end-non-debug@]===]

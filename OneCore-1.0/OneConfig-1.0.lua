@@ -10,30 +10,30 @@ if not OneConfig then return end -- No Upgrade needed.
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
 -- @param store a table used to keep track of what was previously embedded, this is for upgrading.
--- @param mixins a table of what needs to be mixed in    
-local function setup_embed_and_upgrade(lib, store, mixins)        
-    
+-- @param mixins a table of what needs to be mixed in
+local function setup_embed_and_upgrade(lib, store, mixins)
+
     if lib.embeded then
         lib.embedded = lib.embeded
         lib.embeded = nil
     end
-    
+
     lib[store] = lib[store] or {}
     store = lib[store]
-    
+
     local function Embed(self, target)
         for k, v in pairs(mixins) do
             if type(k) == "number" then
                 target[v] = self[v]
             else
                 target[k] = type(v) == "string" and self[v] or v
-            end 
+            end
         end
         store[target] = true
-    end                     
-    
+    end
+
     lib.Embed = Embed
-    
+
     for target, v in pairs(store) do
        lib:Embed(target)
     end
@@ -43,10 +43,10 @@ end
 function OneConfig:InitializeConfiguration()
     local AceConfig = LibStub("AceConfig-3.0")
     local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-    local L = LibStub("AceLocale-3.0"):GetLocale("OneCore-1.0")
+    local L = LibStub("AceLocale-3.1"):GetLocale("OneCore-1.0")
 
 	self.configs = {}
-	
+
 	function GetBaseConfig()
 		return {
 			type = "group",
@@ -73,7 +73,7 @@ function OneConfig:InitializeConfiguration()
 									order = 1
 								},
 								cols = {
-									order = 5, 
+									order = 5,
 									type = "range",
 									name = L["Number of Columns"],
 									desc = L["Sets the maximum number of columns to use"],
@@ -84,7 +84,7 @@ function OneConfig:InitializeConfiguration()
 									set = function(info, cols)
 										self.db.profile.appearance.cols = cols
 										self:OrganizeFrame(true)
-									end	
+									end
 								},
 								desc2 = {
 									type = "description",
@@ -126,12 +126,12 @@ function OneConfig:InitializeConfiguration()
 									type = "description",
 									name = L["There are several customizable colors with regards to your bags.  Each one will control something different."],
 								},
-								background = { 
-					                order = 30, 
-					                type = "color", 
+								background = {
+					                order = 30,
+					                type = "color",
 					                name = L["Background"],
 					 				desc = L["Sets the background color of your bag."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.background
 										return color.r, color.g, color.b, color.a
 									end,
@@ -141,12 +141,12 @@ function OneConfig:InitializeConfiguration()
 									end,
 									hasAlpha = true,
 					            },
-								mouseover = { 
-					                order = 35, 
-					                type = "color", 
+								mouseover = {
+					                order = 35,
+					                type = "color",
 					                name = L["Mouseover"],
 					 				desc = L["Sets the border color of highlighted slots when you mouse over a bag."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.mouseover
 										return color.r, color.g, color.b, color.a
 									end,
@@ -204,7 +204,7 @@ function OneConfig:InitializeConfiguration()
 									end
 								},
 								strata = {
-									order = 15, 
+									order = 15,
 									type = "range",
 									name = L["Frame Strata"],
 									min = 1,
@@ -216,7 +216,7 @@ function OneConfig:InitializeConfiguration()
 									set = function(info, value)
 										self.db.profile.behavior.strata = value
 										self.frame:CustomizeFrame(self.db.profile)
-									end	
+									end
 								},
 								alpha = {
 									order = 20,
@@ -248,7 +248,7 @@ function OneConfig:InitializeConfiguration()
 										self.frame:CustomizeFrame(self.db.profile)
 									end,
 								},
-								
+
 							},
 						},
 						bag = {
@@ -264,7 +264,7 @@ function OneConfig:InitializeConfiguration()
 									name = L["These options affect the way %s works with and treats your bags.  You can use them to do some base customization to the way you view your bags."]:format(self.displayName),
 								},
 								cols = {
-									order = 10, 
+									order = 10,
 									type = "range",
 									name = L["Number of Columns"],
 									desc = L["Sets the maximum number of columns to use"],
@@ -275,7 +275,7 @@ function OneConfig:InitializeConfiguration()
 									set = function(info, cols)
 										self.db.profile.appearance.cols = cols
 										self:OrganizeFrame(true)
-									end	
+									end
 								},
 							}
 						}
@@ -287,16 +287,16 @@ function OneConfig:InitializeConfiguration()
 					args = {
 						general = {
 							type = "group",
-							order = 1, 
+							order = 1,
 							inline = true,
 							name = L["General"],
 							args = {
-								background = { 
-					                order = 5, 
-					                type = "color", 
+								background = {
+					                order = 5,
+					                type = "color",
 					                name = L["Background"],
 					 				desc = L["Sets the background color of your bag."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.background
 										return color.r, color.g, color.b, color.a
 									end,
@@ -306,12 +306,12 @@ function OneConfig:InitializeConfiguration()
 									end,
 									hasAlpha = true,
 					            },
-								mouseover = { 
-					                order = 10, 
-					                type = "color", 
+								mouseover = {
+					                order = 10,
+					                type = "color",
 					                name = L["Mouseover"],
 					 				desc = L["Sets the border color of highlighted slots when you mouse over a bag."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.mouseover
 										return color.r, color.g, color.b, color.a
 									end,
@@ -374,12 +374,12 @@ function OneConfig:InitializeConfiguration()
 							inline = true,
 							name = L["Bag Centric"],
 							args = {
-								ammo = { 
-					                order = 5, 
-					                type = "color", 
+								ammo = {
+					                order = 5,
+					                type = "color",
 					                name = L["Ammo Bags"],
 					 				desc = L["Sets the border color of ammo bag slots."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.ammo
 										return color.r, color.g, color.b, color.a
 									end,
@@ -388,12 +388,12 @@ function OneConfig:InitializeConfiguration()
 										self:UpdateFrame()
 									end
 					            },
-								soul = { 
-					                order = 10, 
-					                type = "color", 
+								soul = {
+					                order = 10,
+					                type = "color",
 					                name = L["Soul Bags"],
 					 				desc = L["Sets the border color of soul bag slots."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.soul
 										return color.r, color.g, color.b, color.a
 									end,
@@ -402,12 +402,12 @@ function OneConfig:InitializeConfiguration()
 										self:UpdateFrame()
 									end
 					            },
-								profession = { 
-					                order = 15, 
-					                type = "color", 
+								profession = {
+					                order = 15,
+					                type = "color",
 					                name = L["Profession Bags"],
 					 				desc = L["Sets the border color of profession bag slots."],
-									get = function(info) 
+									get = function(info)
 										local color = self.db.profile.colors.profession
 										return color.r, color.g, color.b, color.a
 									end,
@@ -487,17 +487,17 @@ function OneConfig:InitializeConfiguration()
 			}
 		}
 	end
-	
+
 	baseconfig = GetBaseConfig()
     local pluginGroupCount = 1
-	for typeName, _ in self:IteratePluginTypes() do                                          
+	for typeName, _ in self:IteratePluginTypes() do
 	    local values = {}
         for pluginName, plugin in self:IteratePluginsByType(typeName) do
             values[pluginName] = ("%s: %s"):format(plugin.pluginName, plugin.description or "")
         end
 
         local pluginGroup = {
-            type = "multiselect", 
+            type = "multiselect",
             name = typeName,
             values = values,
             order = pluginGroupCount,
@@ -505,29 +505,29 @@ function OneConfig:InitializeConfiguration()
             get = function(info, pluginName)
                 return self:GetPlugin(typeName, pluginName):IsEnabled()
             end,
-            set = function(info, pluginName, state)               
+            set = function(info, pluginName, state)
                 local plugin = self:GetPlugin(typeName, pluginName)
-                                                                                  
-                if state then                      
+
+                if state then
                     self:EnablePlugin(plugin)
                 else
                     self:DisablePlugin(plugin)
-                end                         
-                               
+                end
+
                 self:OrganizeFrame(true)
             end,
         }
-     
-        baseconfig.args.plugins.args[typeName] = pluginGroup   
+
+        baseconfig.args.plugins.args[typeName] = pluginGroup
         pluginGroupCount = pluginGroupCount + 1
     end
-	
+
 	if self.LoadCustomConfig then
 		self:LoadCustomConfig(baseconfig)
 	end
-	
+
 	AceConfig:RegisterOptionsTable(self.displayName, baseconfig)
-	
+
 	self.configs.base = baseconfig
 	self.configs.main = AceConfigDialog:AddToBlizOptions(self.displayName, nil, nil, 'general')
 	self.configs.frame = AceConfigDialog:AddToBlizOptions(self.displayName, L["Frame Options"], self.displayName, 'frame')
@@ -540,9 +540,9 @@ end
 function OneConfig:OpenConfig()
 	InterfaceOptionsFrame_OpenToCategory(self.configs.showbags)
 	InterfaceOptionsFrame_OpenToCategory(self.configs.main)
-end           
+end
 
 setup_embed_and_upgrade(OneConfig, "embedded", {
     "InitializeConfiguration",
-    "OpenConfig",  
-})      
+    "OpenConfig",
+})
