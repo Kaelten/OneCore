@@ -43,7 +43,7 @@ end
 function OneConfig:InitializeConfiguration()
     local AceConfig = LibStub("AceConfig-3.0")
     local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-    local L = LibStub("AceLocale-3.1"):GetLocale("OneCore-1.0")
+    local L = LibStub("AceLocale-3.0"):GetLocale("OneCore-1.0")
 
 	self.configs = {}
 
