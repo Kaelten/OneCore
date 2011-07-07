@@ -257,7 +257,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
 	local name = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	name:SetJustifyH("LEFT")
-	name:SetPoint("LEFT", sidebarButton, "RIGHT", 5, 1)
+	name:SetPoint("LEFT", sidebarButton, "RIGHT", 0, 0)
 	frame.name = name
 
 	local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
