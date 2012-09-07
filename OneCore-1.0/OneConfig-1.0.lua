@@ -1,6 +1,11 @@
 --- **OneConfig-1.0** provides a common config table, and framework for onebag's suite
 -- @class file
 -- @name OneConfig-1.0.lua
+
+local _G = _G
+local tonumber, type, pairs = _G.tonumber, _G.type, _G.pairs
+local LibStub = _G.LibStub
+
 local MAJOR, MINOR = "OneConfig-1.0", tonumber("@project-revision@") or 9999
 local OneConfig, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -47,7 +52,7 @@ function OneConfig:InitializeConfiguration()
 
 	self.configs = {}
 
-	function GetBaseConfig()
+	local function GetBaseConfig()
 		return {
 			type = "group",
 			name = self.displayName,
@@ -488,7 +493,7 @@ function OneConfig:InitializeConfiguration()
 		}
 	end
 
-	baseconfig = GetBaseConfig()
+	local baseconfig = GetBaseConfig()
     local pluginGroupCount = 1
 	for typeName, _ in self:IteratePluginTypes() do
 	    local values = {}
@@ -537,6 +542,8 @@ function OneConfig:InitializeConfiguration()
 end
 
 --- Opens the configuration panel expanded so you see the sub options in the treeview
+local InterfaceOptionsFrame_OpenToCategory = _G.InterfaceOptionsFrame_OpenToCategory
+
 function OneConfig:OpenConfig()
 	InterfaceOptionsFrame_OpenToCategory(self.configs.showbags)
 	InterfaceOptionsFrame_OpenToCategory(self.configs.main)

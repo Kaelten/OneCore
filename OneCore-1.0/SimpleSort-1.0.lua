@@ -158,7 +158,8 @@ end
 
 function SimpleSort:GetSlotOrder()
     local slots = {}
- 
+    local start, stop, step, bagid
+
     if self.db.profile.behavior.bagorder == 2 then
         start, stop, step = #self.pluginFor.bagIndexes, 1, -1
     else

@@ -1,6 +1,11 @@
 --- **OneFrame.lua** provies frame creation and handling code for OneSuite
 -- @class file
 -- @name OneFrame.lua
+
+local _G = _G
+local tonumber, pairs, type = _G.tonumber, _G.pairs, _G.type
+local LibStub = _G.LibStub
+
 local MAJOR, MINOR = "OneFrame-1.0", tonumber("@project-revision@") or 9999
 local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -71,7 +76,7 @@ end
 -- frame:SetPosition({ parent=frame, attachAt="TOPLEFT", attachTo="TOPRIGHT", left=0, top=0 })
 function FrameHelpers:SetPosition(position)
 
-    parent = type(position.parent) == "string" and getglobal(position.parent) or position.parent
+    local parent = type(position.parent) == "string" and getglobal(position.parent) or position.parent
 
 	self:ClearAllPoints()
 	self:SetPoint(position.attachAt or "TOPLEFT", parent, position.attachTo or "BOTTOMLEFT", position.left or 0, position.top or 0)

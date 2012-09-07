@@ -1,10 +1,20 @@
 --- **OneCore-1.0** provides common code used by the onebag suite
 -- @class file
 -- @name OneCore-1.0.lua
+local _G = _G
+local LibStub = _G.LibStub
+
 local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-revision@") or 9999
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneCore then return end -- No Upgrade needed.
+
+local _, k, v
+
+local bit, pairs, type, select = _G.bit, _G.pairs, _G.type, _G.select
+local CreateFrame, GetContainerNumFreeSlots, GetContainerItemLink = _G.CreateFrame, _G.GetContainerNumFreeSlots, _G.GetContainerItemLink
+local GetItemInfo, GetContainerItemInfo, SetItemButtonDesaturated = _G.GetItemInfo, _G.GetContainerItemInfo, _G.SetItemButtonDesaturated
+local ContainerFrame_Update, GetItemQualityColor = _G.ContainerFrame_Update, _G.GetItemQualityColor
 
 -- Upgrading Library Variables
 
@@ -163,7 +173,7 @@ function OneCore:BuildFrame()
 		end
 
 		for slot = 1, size do
-			slotkey = ('%s:%s'):format(bag, slot)
+			local slotkey = ('%s:%s'):format(bag, slot)
 			if not self.frame.slots[slotkey] then
 				self.frame.slots[slotkey] = self:CreateSlotFrame(self.frame.bags[bag], slot)
 				self.frame.slots[slotkey]:SetFrameStrata(self.stratas[self.db.profile.behavior.strata])
@@ -256,7 +266,7 @@ end
 -- @param bag the bag's numeric id
 -- @param slot the slot's numeric id
 function OneCore:GetSlot(bag, slot)
-	key = ('%s:%s'):format(bag, slot)
+	local key = ('%s:%s'):format(bag, slot)
 	return self.frame.slots[key]
 end
 
@@ -282,7 +292,7 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 		slot.border = border
 	end
 
-	local bcolor = nil
+	local bcolor
 	if not fcolor and bag.type then
 		if bag:IsAmmoBag() then
 			bcolor = self.db.profile.colors.ammo
@@ -378,11 +388,7 @@ end
 
 --- Replacement for GetContainerNumSlots
 function OneCore:GetContainerNumSlots(bagId)
-    if bagId == KEYRING_CONTAINER then
-        return 0
-    else
-        return _G.GetContainerNumSlots(bagId)
-    end
+    return _G.GetContainerNumSlots(bagId)
 end
 
 --- Updates a slot's locked status.
