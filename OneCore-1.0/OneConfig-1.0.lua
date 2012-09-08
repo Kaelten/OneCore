@@ -379,34 +379,6 @@ function OneConfig:InitializeConfiguration()
 							inline = true,
 							name = L["Bag Centric"],
 							args = {
-								ammo = {
-					                order = 5,
-					                type = "color",
-					                name = L["Ammo Bags"],
-					 				desc = L["Sets the border color of ammo bag slots."],
-									get = function(info)
-										local color = self.db.profile.colors.ammo
-										return color.r, color.g, color.b, color.a
-									end,
-									set = function(info, r, g, b, a)
-										self.db.profile.colors.ammo = {r = r, g = g, b = b, a = a}
-										self:UpdateFrame()
-									end
-					            },
-								soul = {
-					                order = 10,
-					                type = "color",
-					                name = L["Soul Bags"],
-					 				desc = L["Sets the border color of soul bag slots."],
-									get = function(info)
-										local color = self.db.profile.colors.soul
-										return color.r, color.g, color.b, color.a
-									end,
-									set = function(info, r, g, b, a)
-										self.db.profile.colors.soul = {r = r, g = g, b = b, a = a}
-										self:UpdateFrame()
-									end
-					            },
 								profession = {
 					                order = 15,
 					                type = "color",
