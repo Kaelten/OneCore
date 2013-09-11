@@ -244,9 +244,15 @@ function OneCore:UpdateBag(bag)
 		end
 	end
 
-	if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
-		ContainerFrame_Update(self.frame.bags[bag])
-	end
+    if bag == -1 then
+        for slot=1, self.frame.bags[bag].size do
+            BankFrameItemButton_Update(self:GetSlot(bag, slot))
+        end
+    else
+    	if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
+            ContainerFrame_Update(self.frame.bags[bag])
+    	end
+    end
 end
 
 --- This updates all bags and their contents
