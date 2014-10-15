@@ -109,6 +109,20 @@ setup_embed_and_upgrade(SlotHelpers, "slotEmbeded", {
     "ShouldShow",
 })
 
+local blackholeMeta = {}
+
+function blackholeMeta:__newindex(...)
+
+end
+
+function blackholeMeta:__index(...)
+   return setmetatable({}, blackholeMeta)
+end
+
+function blackholeMeta:__call(...)
+
+end
+
 --- Simple function to build a OneBag style bag object.
 -- @param parent the parent frame for the bag
 -- @param id the bag's numeric id
@@ -120,7 +134,7 @@ function OneCore:CreateBagFrame(parent, id)
 	bag.slots = {}
 	bag.handler = self
 
-    bag.FilterIcon = CreateFrame("Frame")
+    bag.FilterIcon = setmetatable({}, blackholeMeta)
 
     BagHelpers:Embed(bag)
 
