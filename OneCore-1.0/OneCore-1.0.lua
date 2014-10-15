@@ -120,6 +120,8 @@ function OneCore:CreateBagFrame(parent, id)
 	bag.slots = {}
 	bag.handler = self
 
+    bag.FilterIcon = CreateFrame("Frame")
+
     BagHelpers:Embed(bag)
 
 	return bag
@@ -251,6 +253,7 @@ function OneCore:UpdateBag(bag)
     else
     	if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
             ContainerFrame_Update(self.frame.bags[bag])
+            ContainerFrame_UpdateCooldowns(self.frame.bags[bag])
     	end
     end
 end
