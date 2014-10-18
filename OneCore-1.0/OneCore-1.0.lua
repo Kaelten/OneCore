@@ -50,26 +50,10 @@ local function setup_embed_and_upgrade(lib, store, mixins)
     end
 end
 
--- BAGTYPE_QUIVER = Quiver + Ammo
--- BAGTYPE_SOUL = Soul Bags
 -- BAGTYPE_PROFESSION = Leather + Inscription + Herb + Enchanting + Engineering + Gem + Mining
-local BAGTYPE_QUIVER = 0x0001 + 0x0002
-local BAGTYPE_SOUL = 0x004
 local BAGTYPE_PROFESSION = 0x0008 + 0x0010 + 0x0020 + 0x0040 + 0x0080 + 0x0200 + 0x0400
 
 local BagHelpers = {}
-
---- Returns whether the bag is an ammo bag
-function BagHelpers:IsAmmoBag()
-	if not self.type or self.type == 0 then return false end
-	return bit.band(self.type, BAGTYPE_QUIVER) > 0
-end
-
---- Returns whether the bag is a soul bag
-function BagHelpers:IsSoulBag()
-	if not self.type or self.type == 0 then return false end
-	return bit.band(self.type, BAGTYPE_SOUL) > 0
-end
 
 --- Returns whether the bag is a profression/trade bag
 function BagHelpers:IsProfessionBag()
@@ -78,8 +62,6 @@ function BagHelpers:IsProfessionBag()
 end
 
 setup_embed_and_upgrade(BagHelpers, "bagEmbeded", {
-    "IsAmmoBag",
-    "IsSoulBag",
     "IsProfessionBag",
 })
 
@@ -90,15 +72,7 @@ local SlotHelpers = {}
 function SlotHelpers:ShouldShow()
 	local bag = self:GetParent()
 
-	if bag:IsAmmoBag() and not self.handler.db.profile.show.ammo then
-		return false
-	end
-
-	if bag:IsSoulBag() and not self.handler.db.profile.show.soul then
-		return false
-	end
-
-	if bag:IsProfessionBag() and not self.handler.db.profile.show.profession then
+    if bag:IsProfessionBag() and not self.handler.db.profile.show.profession then
 		return false
 	end
 
@@ -319,11 +293,7 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 
 	local bcolor
 	if not fcolor and bag.type then
-		if bag:IsAmmoBag() then
-			bcolor = self.db.profile.colors.ammo
-		elseif bag:IsSoulBag() then
-			bcolor = self.db.profile.colors.soul
-		elseif bag:IsProfessionBag() then
+		if bag:IsProfessionBag() then
 			bcolor = self.db.profile.colors.profession
 		end
 
@@ -478,7 +448,7 @@ setup_embed_and_upgrade(OneCore, "embedded", {
 				['*'] = true
 			},
 			appearance = {
-				cols = 10,
+				cols = 12,
 				scale = 1,
 				alpha = 1,
 				glow = false,

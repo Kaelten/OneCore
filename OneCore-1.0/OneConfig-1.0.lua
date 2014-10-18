@@ -412,32 +412,6 @@ function OneConfig:InitializeConfiguration()
 							order = 1,
 							inline = true,
 							args = {
-								ammo = {
-									order = 15,
-									type = "toggle",
-									name = L["Ammo Bags & Quivers"],
-									desc = L["Toggles the display of ammo bags and quivers."],
-									get = function(info)
-										return self.db.profile.show.ammo
-									end,
-									set = function(info, value)
-										self.db.profile.show.ammo = value
-										self:OrganizeFrame(true)
-									end
-								},
-								soul = {
-									order = 10,
-									type = "toggle",
-									name = L["Soul Bags"],
-									desc = L["Toggles the display of soul bags."],
-									get = function(info)
-										return self.db.profile.show.soul
-									end,
-									set = function(info, value)
-										self.db.profile.show.soul = value
-										self:OrganizeFrame(true)
-									end
-								},
 								profession = {
 									order = 5,
 									type = "toggle",
