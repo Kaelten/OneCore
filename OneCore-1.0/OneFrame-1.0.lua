@@ -265,22 +265,51 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	name:SetPoint("LEFT", sidebarButton, "RIGHT", 0, 0)
 	frame.name = name
 
-	local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
-	closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, -5)
-	frame.closeButton = closeButton
+	local configButton = CreateFrame('Button', nil, frame)
+	configButton:SetHeight(32)
+	configButton:SetWidth(32)
 
-	local configButton = CreateFrame('Button', nil, frame, "UIPanelButtonTemplate")
-	configButton:SetHeight(20)
-	configButton:SetWidth(65)
+    configButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -3, -7)
+    configButton:SetNormalTexture("Interface\\Buttons\\UI-SquareButton-Up")
+    configButton:SetPushedTexture("Interface\\Buttons\\UI-SquareButton-Down")
+    configButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
 
-	configButton:SetText("Config")
-	configButton:SetPoint("RIGHT", closeButton, "LEFT", 0, 0)
+    local configButtonIcon = configButton:CreateTexture(nil, "ARTWORK", nil, 5)
+    configButtonIcon:SetHeight(16)
+    configButtonIcon:SetWidth(16)
+
+    configButtonIcon:SetPoint("CENTER", configButton, "CENTER", 0, 0)
+    configButtonIcon:SetTexture("Interface\\Buttons\\UI-OptionsButton")
+
+    configButton.icon = configButtonIcon
+
+    configButton:SetScript("OnMouseDown", function()
+        local point, relativeTo, relativePoint, x, y = configButtonIcon:GetPoint(1);
+        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x-1, y-1);
+    end)
+
+    configButton:SetScript("OnMouseUp", function()
+        local point, relativeTo, relativePoint, x, y = configButtonIcon:GetPoint(1);
+        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x+1, y+1);
+    end)
 
 	configButton:SetScript("OnClick", function()
 		frame.handler:OpenConfig()
 	end)
 
 	frame.configButton = configButton
+
+    local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
+    sortButton:SetHeight(25)
+    sortButton:SetWidth(28)
+    sortButton:SetPoint("RIGHT", configButton, "LEFT", 2, -1)
+
+    sortButton:SetScript("OnEnter", nil)
+    sortButton:SetScript("OnLeave", nil)
+    sortButton:SetScript("OnClick", function()
+        PlaySound("UI_BagSorting_01");
+        frame.handler:SortBags()
+    end)
 
     frame.childrenFrames = {}
 

@@ -150,7 +150,9 @@ function OneCore:CreateSlotFrame(parent, id)
 
 	if bagID == -1 then
 		slotType = "BankItemButtonGenericTemplate"
-	end
+	elseif bagID == -3 then
+        slotType = "ReagentBankItemButtonGenericTemplate"
+    end
 
 	local slot = CreateFrame("Button", parent:GetName().."Item"..id, parent, slotType)
 
@@ -260,7 +262,7 @@ function OneCore:UpdateBag(bag)
 		end
 	end
 
-    if bag == -1 then
+    if bag == -1 or bag == -3 then
         for slot=1, self.frame.bags[bag].size do
             BankFrameItemButton_Update(self:GetSlot(bag, slot))
         end
@@ -449,7 +451,7 @@ setup_embed_and_upgrade(OneCore, "embedded", {
     colWidth = 39,
     rowHeight = 39,
     topBorder = 2,
-    bottomBorder = 24,
+    bottomBorder = 30,
     rightBorder = 5,
     leftBorder = 8,
 
