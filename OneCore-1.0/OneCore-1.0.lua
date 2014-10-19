@@ -225,12 +225,16 @@ end
 --- This function will update a single bag and it's contents
 -- @param bag the numeric id of the bag
 function OneCore:UpdateBag(bag)
-	if not self.frame.bags or not self.frame.bags[bag] then
+	if not self.frame.bags then
 		return
 	end
 
 	self:BuildFrame()
 	self:OrganizeFrame()
+
+    if not self.frame.bags[bag] then
+        return
+    end
 
 	if not self.frame.bags[bag].colorLocked then
 		for slot=1, self.frame.bags[bag].size do
