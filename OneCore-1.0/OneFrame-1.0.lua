@@ -313,6 +313,26 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
     frame.childrenFrames = {}
 
+    local searchbox = CreateFrame("EditBox", nil, frame, "SearchBoxTemplate")
+    searchbox:SetAutoFocus(false)
+    searchbox:SetHeight(20)
+    searchbox:SetWidth(110)
+
+    searchbox:SetPoint("RIGHT", sortButton, "LEFT", -2, 2)
+
+    searchbox:SetScript('OnChar', BagSearch_OnChar)
+
+    searchbox:SetScript("OnHide", function()
+        searchbox.clearButton:Click()
+    end)
+
+    searchbox:SetScript("OnTextChanged", function()
+        SearchBoxTemplate_OnTextChanged(searchbox)
+        frame.handler:OnSearch(searchbox:GetText())
+    end)
+
+    frame.searchbox = searchbox
+
 	return frame
 end
 

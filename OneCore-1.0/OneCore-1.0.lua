@@ -16,6 +16,8 @@ local CreateFrame, GetContainerNumFreeSlots, GetContainerItemLink = _G.CreateFra
 local GetItemInfo, GetContainerItemInfo, SetItemButtonDesaturated = _G.GetItemInfo, _G.GetContainerItemInfo, _G.SetItemButtonDesaturated
 local ContainerFrame_Update, GetItemQualityColor = _G.ContainerFrame_Update, _G.GetItemQualityColor
 
+local SearchEngine = LibStub('LibItemSearch-1.2')
+
 -- Upgrading Library Variables
 
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
@@ -232,7 +234,8 @@ function OneCore:UpdateBag(bag)
 
 	if not self.frame.bags[bag].colorLocked then
 		for slot=1, self.frame.bags[bag].size do
-			self:ColorSlotBorder(self:GetSlot(bag, slot))
+            local slot = self:GetSlot(bag, slot)
+			self:ColorSlotBorder(slot)
 		end
 	end
 
@@ -245,6 +248,12 @@ function OneCore:UpdateBag(bag)
             ContainerFrame_Update(self.frame.bags[bag])
             ContainerFrame_UpdateCooldowns(self.frame.bags[bag])
     	end
+    end
+
+    for slot=1, self.frame.bags[bag].size do
+        local slot = self:GetSlot(bag, slot)
+        self:ColorSlotBorder(slot)
+        self:ApplySearchFilter(slot)
     end
 end
 
@@ -365,6 +374,25 @@ function OneCore:UnhighlightBagSlots(bagid)
 	self:ColorManySlotBorders(bagid)
 end
 
+function OneCore:OnSearch(term)
+    self.searchTerm = term;
+    self:UpdateFrame()
+end
+
+function OneCore:ApplySearchFilter(slot)
+    if self.searchTerm and #self.searchTerm > 1 then
+        local link = GetContainerItemLink(slot:GetParent():GetID(), slot:GetID())
+        if not link or SearchEngine:Matches(link, self.searchTerm) then
+            slot.searchOverlay:Hide()
+        else
+            self:ColorSlotBorder(slot, plain)
+            slot.searchOverlay:Show()
+        end
+    else
+        slot.searchOverlay:Hide()
+    end
+end
+
 --- This function returns the order of slots
 function OneCore:GetSlotOrder()
     for name, plugin in self:IterateActivePluginsByType('sorting') do
@@ -408,7 +436,9 @@ setup_embed_and_upgrade(OneCore, "embedded", {
     "OrganizeFrame",
     "UpdateBag",
     "UpdateFrame",
+    "OnSearch",
     "GetSlot",
+    "ApplySearchFilter",
     "ColorSlotBorder",
     "ColorManySlotBorders",
     "HighlightBagSlots",
