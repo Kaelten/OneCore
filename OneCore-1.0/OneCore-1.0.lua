@@ -357,7 +357,7 @@ end
 -- @param bagid the numeric id of the bag
 -- @param color the color to use when highlighting, optional
 function OneCore:ColorManySlotBorders(bagid, color)
-    if bagid and not self.frame.bags[bagid] then
+    if self.frame.bags and (bagid and not self.frame.bags[bagid]) then
         return
     end
 
