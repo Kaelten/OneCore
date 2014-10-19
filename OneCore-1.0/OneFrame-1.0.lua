@@ -265,11 +265,15 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	name:SetPoint("LEFT", sidebarButton, "RIGHT", 0, 0)
 	frame.name = name
 
+    local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
+    closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, -5)
+    frame.closeButton = closeButton
+
 	local configButton = CreateFrame('Button', nil, frame)
 	configButton:SetHeight(32)
 	configButton:SetWidth(32)
 
-    configButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -3, -7)
+    configButton:SetPoint("RIGHT", closeButton, "LEFT", 3, -2)
     configButton:SetNormalTexture("Interface\\Buttons\\UI-SquareButton-Up")
     configButton:SetPushedTexture("Interface\\Buttons\\UI-SquareButton-Down")
     configButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
