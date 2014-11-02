@@ -315,6 +315,8 @@ function OneFrame:CreateMainFrame(framename, moneyType)
         frame.handler:SortBags()
     end)
 
+    frame.sortButton = sortButton
+
     frame.childrenFrames = {}
 
     local searchbox = CreateFrame("EditBox", nil, frame, "SearchBoxTemplate")

@@ -268,6 +268,19 @@ function OneConfig:InitializeConfiguration()
 									type = 'description',
 									name = L["These options affect the way %s works with and treats your bags.  You can use them to do some base customization to the way you view your bags."]:format(self.displayName),
 								},
+								showsort = {
+									order = 5,
+									type = "toggle",
+									name = L["Show Sort Button"],
+									desc = L["Should show the sort button at the top of the UI."],
+									get = function(info)
+										return self.db.profile.appearance.showsort
+									end,
+									set = function(info, value)
+										self.db.profile.appearance.showsort = value
+										self:UpdateFrameHeader()
+									end,
+								},
 								cols = {
 									order = 10,
 									type = "range",

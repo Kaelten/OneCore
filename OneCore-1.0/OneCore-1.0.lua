@@ -274,6 +274,16 @@ function OneCore:UpdateFrame()
 	end
 end
 
+function OneCore:UpdateFrameHeader()
+    if self.db.profile.appearance.showsort then
+        self.frame.sortButton:Show()
+        self.frame.searchbox:SetPoint("RIGHT", self.frame.sortButton, "LEFT", -2, 2)
+    else
+        self.frame.sortButton:Hide()
+        self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
+    end
+end
+
 --- Helper function that returns a single slot
 -- @param bag the bag's numeric id
 -- @param slot the slot's numeric id
@@ -440,6 +450,7 @@ setup_embed_and_upgrade(OneCore, "embedded", {
     "OrganizeFrame",
     "UpdateBag",
     "UpdateFrame",
+    "UpdateFrameHeader",
     "OnSearch",
     "GetSlot",
     "ApplySearchFilter",
@@ -488,6 +499,7 @@ setup_embed_and_upgrade(OneCore, "embedded", {
 				glow = false,
 				rarity = true,
 				white = false,
+                showsort = true,
 			},
 			behavior = {
 				strata = 2,
