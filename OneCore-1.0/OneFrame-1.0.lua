@@ -311,7 +311,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
     sortButton:SetScript("OnEnter", nil)
     sortButton:SetScript("OnLeave", nil)
     sortButton:SetScript("OnClick", function()
-        PlaySound("UI_BagSorting_01");
+        PlaySound(43937, "SFX");
         frame.handler:SortBags()
     end)
 
