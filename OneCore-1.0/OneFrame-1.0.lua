@@ -199,6 +199,18 @@ function OneFrame:CreateSideBar(framename, parent, width, height)
 	return sidebar
 end
 
+--- Creates a highlight texture for a Button
+function OneFrame:CreateButtonHighlight(button)
+    local highlight = button:CreateTexture(nil, "OVERLAY")
+    
+    highlight:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+	highlight:SetAllPoints(button)
+	highlight:SetBlendMode("ADD")
+    highlight:Hide()
+    
+    return highlight
+end
+
 --- Creates a main frame, complete with fixins and widgets and stuff.
 -- @param framename the name of the frame, passed into CreateFrame
 -- @param moneyType the type of moneyframe to use on this frame.
@@ -348,4 +360,5 @@ setup_embed_and_upgrade(OneFrame, "embedded", {
     "CreateBaseFrame",
     "CreateSideBar",
     "CreateMainFrame",
+    "CreateButtonHighlight",
 })

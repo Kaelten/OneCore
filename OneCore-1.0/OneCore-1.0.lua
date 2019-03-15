@@ -130,7 +130,7 @@ function OneCore:CreateSlotFrame(parent, id)
         slotType = "ReagentBankItemButtonGenericTemplate"
     end
 
-	local slot = CreateFrame("Button", parent:GetName().."Item"..id, parent, slotType)
+	local slot = CreateFrame("ItemButton", parent:GetName().."Item"..id, parent, slotType)
 
 	slot:SetID(id)
 	slot:SetFrameLevel(parent:GetParent():GetFrameLevel()+5)
