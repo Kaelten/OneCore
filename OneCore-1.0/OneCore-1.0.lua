@@ -4,7 +4,7 @@
 local _G = _G
 local LibStub = _G.LibStub
 
-local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-revision@") or 9999
+local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-timestamp@") or 9999
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneCore then return end -- No Upgrade needed.
