@@ -166,7 +166,7 @@ end
 -- @param width the width of the frame, defaults to 200
 -- @param height the height of the frame, defaults to 200
 function OneFrame:CreateBaseFrame(framename, width, height)
-	local frame = CreateFrame('Frame', framename, UIParent)
+	local frame = CreateFrame('Frame', framename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
     FrameHelpers:Embed(frame)
 
