@@ -130,7 +130,8 @@ function OneCore:CreateSlotFrame(parent, id)
         slotType = "ReagentBankItemButtonGenericTemplate"
     end
 
-	local slot = CreateFrame("ItemButton", parent:GetName().."Item"..id, parent, slotType)
+    local frameType = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "ItemButton" or "Button"
+	local slot = CreateFrame(frameType, parent:GetName().."Item"..id, parent, slotType)
 
 	slot:SetID(id)
 	slot:SetFrameLevel(parent:GetParent():GetFrameLevel()+5)
@@ -275,6 +276,11 @@ function OneCore:UpdateFrame()
 end
 
 function OneCore:UpdateFrameHeader()
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
+        return
+    end
+
     if self.db.profile.appearance.showsort then
         self.frame.sortButton:Show()
         self.frame.searchbox:SetPoint("RIGHT", self.frame.sortButton, "LEFT", -2, 2)

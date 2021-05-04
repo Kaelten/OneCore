@@ -202,12 +202,12 @@ end
 --- Creates a highlight texture for a Button
 function OneFrame:CreateButtonHighlight(button)
     local highlight = button:CreateTexture(nil, "OVERLAY")
-    
+
     highlight:SetTexture("Interface\\Buttons\\CheckButtonHilight")
 	highlight:SetAllPoints(button)
 	highlight:SetBlendMode("ADD")
     highlight:Hide()
-    
+
     return highlight
 end
 
@@ -315,19 +315,21 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
 	frame.configButton = configButton
 
-    local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
-    sortButton:SetHeight(25)
-    sortButton:SetWidth(28)
-    sortButton:SetPoint("RIGHT", configButton, "LEFT", 2, -1)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
+        sortButton:SetHeight(25)
+        sortButton:SetWidth(28)
+        sortButton:SetPoint("RIGHT", configButton, "LEFT", 2, -1)
 
-    sortButton:SetScript("OnEnter", nil)
-    sortButton:SetScript("OnLeave", nil)
-    sortButton:SetScript("OnClick", function()
-        PlaySound(43937, "SFX");
-        frame.handler:SortBags()
-    end)
+        sortButton:SetScript("OnEnter", nil)
+        sortButton:SetScript("OnLeave", nil)
+        sortButton:SetScript("OnClick", function()
+            PlaySound(43937, "SFX");
+            frame.handler:SortBags()
+        end)
 
-    frame.sortButton = sortButton
+        frame.sortButton = sortButton
+    end
 
     frame.childrenFrames = {}
 
