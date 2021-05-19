@@ -1,5 +1,5 @@
 ## Interface: 11307
-## Title: OneCore-1.0 Classic
+## Title: OneCore-1.0 -- Classic
 ## Notes: OneCore is the centralized code shared between OneBag and OneBank
 ## Author: Kaelten
 ## X-eMail: kaelten@gmail.com

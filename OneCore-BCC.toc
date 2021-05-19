@@ -1,5 +1,5 @@
 ## Interface: 20501
-## Title: OneCore-1.0 BC
+## Title: OneCore-1.0 -- BC
 ## Notes: OneCore is the centralized code shared between OneBag and OneBank
 ## Author: Kaelten
 ## X-eMail: kaelten@gmail.com
