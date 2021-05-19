@@ -7,7 +7,11 @@ local LibStub = _G.LibStub
 local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-timestamp@") or 9999
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
-if not OneCore then return end -- No Upgrade needed.
+if not OneCore then return end -- No Upgrade needed
+
+OneCore.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+OneCore.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+OneCore.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
 local _, k, v
 
@@ -130,7 +134,7 @@ function OneCore:CreateSlotFrame(parent, id)
         slotType = "ReagentBankItemButtonGenericTemplate"
     end
 
-    local frameType = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "ItemButton" or "Button"
+    local frameType = self.IsRetail and "ItemButton" or "Button"
 	local slot = CreateFrame(frameType, parent:GetName().."Item"..id, parent, slotType)
 
 	slot:SetID(id)
@@ -276,7 +280,7 @@ function OneCore:UpdateFrame()
 end
 
 function OneCore:UpdateFrameHeader()
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if not self.IsRetail then
         self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
         return
     end

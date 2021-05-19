@@ -11,6 +11,11 @@ local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.
 
+OneFrame.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+OneFrame.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+OneFrame.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+
+
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
 -- @param store a table used to keep track of what was previously embedded, this is for upgrading.
@@ -315,7 +320,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
 	frame.configButton = configButton
 
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    if self.IsRetail then
         local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
         sortButton:SetHeight(25)
         sortButton:SetWidth(28)
