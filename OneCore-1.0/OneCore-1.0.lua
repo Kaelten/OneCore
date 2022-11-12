@@ -284,7 +284,7 @@ function OneCore:UpdateBag(bag)
 			else
 				SetItemButtonTextureVertexColor(slot, 1, 1, 1);
 			end
-			SetItemButtonDesaturated(slot, false, 0.5, 0.5)
+			SetItemButtonDesaturated(slot, containerInfo.isLocked, 0.5, 0.5)
 			-- Bandaid cooldown fix stop
 		else
 			if(slot.UpgradeIcon) then
@@ -294,7 +294,6 @@ function OneCore:UpdateBag(bag)
 			_G[slot:GetName().."IconTexture"]:Hide()
 			_G[slot:GetName().."Count"]:Hide()
 			_G[slot:GetName().."Cooldown"]:Hide()
-			SetItemButtonDesaturated(slot, false, 0.5, 0.5)
 		end
         self:ColorSlotBorder(slot)
         self:ApplySearchFilter(slot)
@@ -478,9 +477,8 @@ function OneCore:UpdateItemLock(event, bagid, slotid)
     if bagid == nil or slotid == nil then
         return
     end
-
-    --local texture, itemCount, locked, quality, readable = C_Container.GetContainerItemInfo(bagid, slotid); Seems to be bugged as of 10.0.2 Beta Build 46619
-    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), true, 0.5, 0.5, 0.5);
+    local containerInfo = C_Container.GetContainerItemInfo(bagid, slotid)
+    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), containerInfo.isLocked, 0.5, 0.5, 0.5)
 end
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
