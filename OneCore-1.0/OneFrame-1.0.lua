@@ -11,11 +11,6 @@ local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.
 
-OneFrame.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
-OneFrame.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
-OneFrame.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
-
-
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
 -- @param store a table used to keep track of what was previously embedded, this is for upgrading.
@@ -197,7 +192,7 @@ end
 -- @param width the width of the frame, defaults to 60
 -- @param height the height of the frame, defaults to 223
 function OneFrame:CreateSideBar(framename, parent, width, height)
-    local sidebar = self:CreateBaseFrame(framename, width or 60, height or 223)
+    local sidebar = self:CreateBaseFrame(framename, width or 60, height or 265)
 
 	sidebar:SetPosition({ parent=parent, attachAt="TOPRIGHT", attachTo="TOPLEFT" })
 
@@ -268,9 +263,11 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	sidebarButton:SetScript("OnClick", function()
 		if sidebarButton:GetChecked() then
 			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
+            SetCVar("expandBagBar", true)
 			frame.sidebar:Show()
 		else
 			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
+            SetCVar("expandBagBar", false)
 			frame.sidebar:Hide()
 		end
 	end)
@@ -283,14 +280,14 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 	frame.name = name
 
     local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
-    closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, -5)
+    closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -10, -10)
     frame.closeButton = closeButton
 
 	local configButton = CreateFrame('Button', nil, frame)
 	configButton:SetHeight(32)
 	configButton:SetWidth(32)
 
-    configButton:SetPoint("RIGHT", closeButton, "LEFT", 3, -2)
+    configButton:SetPoint("RIGHT", closeButton, "LEFT", 0, 0)
     configButton:SetNormalTexture("Interface\\Buttons\\UI-SquareButton-Up")
     configButton:SetPushedTexture("Interface\\Buttons\\UI-SquareButton-Down")
     configButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
@@ -320,7 +317,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
 	frame.configButton = configButton
 
-    if self.IsRetail then
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
         local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
         sortButton:SetHeight(25)
         sortButton:SetWidth(28)

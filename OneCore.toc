@@ -1,6 +1,4 @@
-## Interface: 90005
-## Interface-BCC: 20501
-## Interface-Classic: 11307
+## Interface: 100000
 ## Title: OneCore-1.0
 ## Notes: OneCore is the centralized code shared between OneBag and OneBank
 ## Author: Kaelten

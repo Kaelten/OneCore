@@ -7,18 +7,14 @@ local LibStub = _G.LibStub
 local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-timestamp@") or 9999
 local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
-if not OneCore then return end -- No Upgrade needed
-
-OneCore.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
-OneCore.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
-OneCore.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+if not OneCore then return end -- No Upgrade needed.
 
 local _, k, v
 
 local bit, pairs, type, select = _G.bit, _G.pairs, _G.type, _G.select
 local CreateFrame, GetContainerNumFreeSlots, GetContainerItemLink = _G.CreateFrame, _G.GetContainerNumFreeSlots, _G.GetContainerItemLink
 local GetItemInfo, GetContainerItemInfo, SetItemButtonDesaturated = _G.GetItemInfo, _G.GetContainerItemInfo, _G.SetItemButtonDesaturated
-local ContainerFrame_Update, GetItemQualityColor = _G.ContainerFrame_Update, _G.GetItemQualityColor
+local ContainerFrame_UpdateAll, GetItemQualityColor = _G.ContainerFrame_UpdateAll, _G.GetItemQualityColor
 
 local SearchEngine = LibStub('LibItemSearch-1.2')
 
@@ -134,7 +130,7 @@ function OneCore:CreateSlotFrame(parent, id)
         slotType = "ReagentBankItemButtonGenericTemplate"
     end
 
-    local frameType = self.IsRetail and "ItemButton" or "Button"
+    local frameType = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "ItemButton" or "Button"
 	local slot = CreateFrame(frameType, parent:GetName().."Item"..id, parent, slotType)
 
 	slot:SetID(id)
@@ -153,8 +149,8 @@ end
 --- This function is responsible for creating all the children of the frame, this makes lazy creation possible
 function OneCore:BuildFrame()
 	for _, bag in pairs(self.bagIndexes) do
-		local size = self:GetContainerNumSlots(bag)
-		local bagType = select(2, GetContainerNumFreeSlots(bag))
+		local size = OneCore:GetContainerNumSlots(bag);
+		local bagType = select(2, C_Container.GetContainerNumFreeSlots(bag))
 
 		if not self.frame.bags then
 			self.frame.bags = {}
@@ -163,13 +159,13 @@ function OneCore:BuildFrame()
 		if not self.frame.bags[bag] then
 			self.frame.bags[bag] = self:CreateBagFrame(self.frame, bag)
 		end
-
 		self.frame.bags[bag].type = bagType
 
 		if self.frame.bags[bag].size ~= size then
 			self.frame.bags[bag].size = size
 			self.doOrganization = true
 		end
+	
 
 		for slot = 1, size do
 			local slotkey = ('%s:%s'):format(bag, slot)
@@ -233,7 +229,6 @@ function OneCore:UpdateBag(bag)
 	if not self.frame.bags then
 		return
 	end
-
 	self:BuildFrame()
 	self:OrganizeFrame()
 
@@ -254,13 +249,53 @@ function OneCore:UpdateBag(bag)
         end
     else
     	if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
-            ContainerFrame_Update(self.frame.bags[bag])
-            ContainerFrame_UpdateCooldowns(self.frame.bags[bag])
+            ContainerFrame_UpdateAll(self.frame.bags[bag]) 
+			--ContainerFrameMixin:UpdateCooldowns()
     	end
     end
-
     for slot=1, self.frame.bags[bag].size do
         local slot = self:GetSlot(bag, slot)
+		local bag = slot:GetParent()
+		--[[
+
+		10.0 Biggest scuffed fix but its working
+
+		]]
+		-- Remove the blue border kinda scuffed aswell but if it works.. it works ..
+		if (slot.BattlepayItemTexture) then
+			slot.BattlepayItemTexture:Hide()
+		end	
+
+		local containerInfo = C_Container.GetContainerItemInfo(bag:GetID(), slot:GetID())
+		local itemIsUpgrade = PawnIsContainerItemAnUpgrade and PawnIsContainerItemAnUpgrade(bag:GetID(), slot:GetID())
+		if containerInfo then
+			slot:SetItemButtonTexture(containerInfo.iconFileID)
+			slot:SetItemButtonCount(containerInfo.stackCount)
+			-- Add Pawn Support
+			if (itemIsUpgrade) then
+				slot.UpgradeIcon:Show()
+			end
+			-- Bandaid cooldown fix start
+			local cooldown = _G[slot:GetName().."Cooldown"]
+			local start, duration, enable = C_Container.GetContainerItemCooldown(bag:GetID(), slot:GetID())
+			CooldownFrame_Set(cooldown, start, duration, enable);
+			if ( duration > 0 and enable == 0 ) then
+				SetItemButtonTextureVertexColor(slot, 0.4, 0.4, 0.4);
+			else
+				SetItemButtonTextureVertexColor(slot, 1, 1, 1);
+			end
+			SetItemButtonDesaturated(slot, false, 0.5, 0.5)
+			-- Bandaid cooldown fix stop
+		else
+			if(slot.UpgradeIcon) then
+				slot.UpgradeIcon:Hide()
+			end
+			-- Bandaid fix to remove item's previous location data when we drag it somewhere
+			_G[slot:GetName().."IconTexture"]:Hide()
+			_G[slot:GetName().."Count"]:Hide()
+			_G[slot:GetName().."Cooldown"]:Hide()
+			SetItemButtonDesaturated(slot, false, 0.5, 0.5)
+		end
         self:ColorSlotBorder(slot)
         self:ApplySearchFilter(slot)
     end
@@ -280,7 +315,7 @@ function OneCore:UpdateFrame()
 end
 
 function OneCore:UpdateFrameHeader()
-    if not self.IsRetail then
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
         self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
         return
     end
@@ -326,7 +361,7 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 
 	local bcolor
 	if not fcolor and bag.type then
-		if bag:IsProfessionBag() then
+		if ((bag:IsProfessionBag()) or (bag:GetID() == 5)) then
 			bcolor = self.db.profile.colors.profession
 		end
 
@@ -334,7 +369,7 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 	end
 
 	if self.db.profile.appearance.rarity and not fcolor and not bcolor then
-		local link = GetContainerItemLink(bag:GetID(), slot:GetID())
+		local link = C_Container.GetContainerItemLink(bag:GetID(), slot:GetID())
 		if link then
 			local rarity = select(3, GetItemInfo(link))
 			if rarity and (rarity > 1 or self.db.profile.appearance.lowlevel) then
@@ -348,7 +383,6 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 			end
 		end
 	end
-
 	local texture = slot:GetNormalTexture()
 	if self.db.profile.appearance.glow and color ~= plain then
 		texture:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
@@ -364,7 +398,6 @@ function OneCore:ColorSlotBorder(slot, fcolor)
         texture:SetPoint("CENTER", slot, "CENTER", 0, 0)
 		texture:SetAlpha(1)
 		texture:SetVertexColor(1, 1, 1)
-
 		slot.border:Show()
 		slot.glowing = false
 	end
@@ -380,7 +413,6 @@ function OneCore:ColorManySlotBorders(bagid, color)
     if self.frame.bags and (bagid and not self.frame.bags[bagid]) then
         return
     end
-
     for slotid = 1, self.frame.bags[bagid].size do
 		self:ColorSlotBorder(self:GetSlot(bagid, slotid), color)
 	end
@@ -405,7 +437,7 @@ end
 
 function OneCore:ApplySearchFilter(slot)
     if self.searchTerm and #self.searchTerm > 1 then
-        local link = GetContainerItemLink(slot:GetParent():GetID(), slot:GetID())
+        local link = C_Container.GetContainerItemLink(slot:GetParent():GetID(), slot:GetID())
         if not link or SearchEngine:Matches(link, self.searchTerm) then
             slot.searchOverlay:Hide()
         else
@@ -435,7 +467,7 @@ end
 
 --- Replacement for GetContainerNumSlots
 function OneCore:GetContainerNumSlots(bagId)
-    return _G.GetContainerNumSlots(bagId)
+    return _G.C_Container.GetContainerNumSlots(bagId)
 end
 
 --- Updates a slot's locked status.
@@ -447,8 +479,8 @@ function OneCore:UpdateItemLock(event, bagid, slotid)
         return
     end
 
-    local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bagid, slotid);
-    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), locked, 0.5, 0.5, 0.5);
+    --local texture, itemCount, locked, quality, readable = C_Container.GetContainerItemInfo(bagid, slotid); Seems to be bugged as of 10.0.2 Beta Build 46619
+    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), true, 0.5, 0.5, 0.5);
 end
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
