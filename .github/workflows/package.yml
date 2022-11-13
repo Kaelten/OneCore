@@ -6,15 +6,15 @@ name: Package Addon
 # other branches or even pullrequests.
 on:
   push:
-    branches: [main]
-    tags: [v1.*]
+    branches: [ main ]
+    tags: [ v1.* ]
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
   packager:
     runs-on: ubuntu-latest
     env:
-       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
       # WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
       # WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
       GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
