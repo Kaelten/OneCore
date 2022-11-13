@@ -1,2 +1,3 @@
 package-as: OneCore
 license-output: LICENSE.txt
+enable-toc-creation: true
