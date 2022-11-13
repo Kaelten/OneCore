@@ -1,0 +1,28 @@
+name: Package Addon
+
+# we need to let GitHub know _when_ we want to release, typically only when we create a new tag.
+# this will target only tags, and not all pushes to the master branch.
+# this part can be heavily customized to your liking, like targeting only tags that match a certain word,
+# other branches or even pullrequests.
+on:
+  push:
+    tags:
+      - "**"
+
+# a workflow is built up as jobs, and within these jobs are steps
+jobs:
+  packager:
+    runs-on: ubuntu-latest
+    env:
+      # CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      # WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+      # WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # gets entire git history, needed for automatic changelogs
+      - name: Run Packager
+        uses: BigWigsMods/packager@v2
