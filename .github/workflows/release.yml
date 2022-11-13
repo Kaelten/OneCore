@@ -6,8 +6,8 @@ name: Package Addon
 # other branches or even pullrequests.
 on:
   push:
-    tags:
-      - "**"
+    branches: [main]
+    tags: [v1.*]
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
