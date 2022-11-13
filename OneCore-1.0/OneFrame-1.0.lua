@@ -7,7 +7,7 @@ local tonumber, pairs, type = _G.tonumber, _G.pairs, _G.type
 local LibStub = _G.LibStub
 
 local MAJOR, MINOR = "OneFrame-1.0", tonumber("@project-revision@") or 9999
-local OneFrame, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+local OneFrame, _oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.
 
@@ -15,6 +15,7 @@ OneFrame.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
 OneFrame.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 OneFrame.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
+local _, k, v
 
 --- This will setup the embed function on the library as well as upgrade any old embeds will also upgrade the store
 -- @param lib the library being setup
@@ -48,8 +49,8 @@ local function setup_embed_and_upgrade(lib, store, mixins)
 
     lib.Embed = Embed
 
-    for target, v in pairs(store) do
-       lib:Embed(target)
+    for target, _ in pairs(store) do
+        lib:Embed(target)
     end
 end
 
@@ -70,8 +71,8 @@ local FrameHelpers = {
 -- @param width passed into SetWidth
 -- @param height passed into SetHeight
 function FrameHelpers:SetSize(width, height)
-	self:SetWidth(width)
-	self:SetHeight(height)
+    self:SetWidth(width)
+    self:SetHeight(height)
 end
 
 --- Wrapper for setting of position, will also ClearAllPoints first
@@ -83,45 +84,46 @@ function FrameHelpers:SetPosition(position)
 
     local parent = type(position.parent) == "string" and getglobal(position.parent) or position.parent
 
-	self:ClearAllPoints()
-	self:SetPoint(position.attachAt or "TOPLEFT", parent, position.attachTo or "BOTTOMLEFT", position.left or 0, position.top or 0)
+    self:ClearAllPoints()
+    self:SetPoint(position.attachAt or "TOPLEFT", parent, position.attachTo or "BOTTOMLEFT", position.left or 0,
+        position.top or 0)
 end
 
 --- Gets the current positionTable of the frame, returns a string for parent
 function FrameHelpers:GetPosition()
-	return {
-		top = self:GetTop(),
-		left = self:GetLeft(),
-		parent = self:GetParent():GetName(),
-	}
+    return {
+        top = self:GetTop(),
+        left = self:GetLeft(),
+        parent = self:GetParent():GetName(),
+    }
 end
 
 --- Will customize a frame based on the values stored in a db table
 -- @param db the database table on which to base the customization.
 -- @note the function assumes the db table has several subtables: appearance, colors, & behavior
 function FrameHelpers:CustomizeFrame(db)
-	self:SetScale(db.appearance.scale or 1)
-	self:SetAlpha(db.appearance.alpha or 1)
+    self:SetScale(db.appearance.scale or 1)
+    self:SetAlpha(db.appearance.alpha or 1)
 
-	local c = db.colors.background or { r=1, g=1, b=1, a=1 }
-	self:SetBackdropColor(c.r, c.g, c.b, c.a)
+    local c = db.colors.background or { r = 1, g = 1, b = 1, a = 1 }
+    self:SetBackdropColor(c.r, c.g, c.b, c.a)
 
-	self:SetClampedToScreen(db.behavior.clamped or true)
+    self:SetClampedToScreen(db.behavior.clamped or true)
 
-	local strata = self.stratas[db.behavior.strata or 2]
+    local strata = self.stratas[db.behavior.strata or 2]
 
-	self:SetFrameStrata(strata)
-	if self.slots then
-		for _, slot in pairs(self.slots) do
-			slot:SetFrameStrata(strata)
-		end
-	end
+    self:SetFrameStrata(strata)
+    if self.slots then
+        for _, slot in pairs(self.slots) do
+            slot:SetFrameStrata(strata)
+        end
+    end
 
-	if self.childrenFrames then
-	    for _, frame in pairs(self.childrenFrames) do
+    if self.childrenFrames then
+        for _, frame in pairs(self.childrenFrames) do
             frame:CustomizeFrame(db)
-	    end
-	end
+        end
+    end
 end
 
 setup_embed_and_upgrade(FrameHelpers, "embeddedFrames", {
@@ -137,8 +139,8 @@ setup_embed_and_upgrade(FrameHelpers, "embeddedFrames", {
 -- @param color the text color, a rgb table, defaults to white
 -- @param size the size of the font, defaults to 13
 function OneFrame:CreateFontString(parent, color, size)
-	local c = color or {r=1, g=1, b=1}
-	local fontstring = parent:CreateFontString(nil, "OVERLAY")
+    local c = color or { r = 1, g = 1, b = 1 }
+    local fontstring = parent:CreateFontString(nil, "OVERLAY")
 
     fontstring:SetWidth(365)
     fontstring:SetHeight(15)
@@ -157,38 +159,37 @@ end
 -- @param framename the name used when creating the moneyframe
 -- @param parent the frame this moneyframe will belong to
 -- @param type the type of money frame we're making
-function OneFrame:CreateSmallMoneyFrame(framename, parent, type)
-	local moneyframe = CreateFrame("Frame", parent:GetName()..framename, parent, "SmallMoneyFrameTemplate")
+function OneFrame:CreateSmallMoneyFrame(framename, parent, frameType)
+    local moneyframe = CreateFrame("Frame", parent:GetName() .. framename, parent, "SmallMoneyFrameTemplate")
 
-	SmallMoneyFrame_OnLoad(moneyframe, type)
+    SmallMoneyFrame_OnLoad(moneyframe, frameType)
 
-	return moneyframe
+    return moneyframe
 end
-
 
 --- Creates a simple empty frame with the appropriate attributes and backgrounds
 -- @param framename used as the frame's name in CreateFrame
 -- @param width the width of the frame, defaults to 200
 -- @param height the height of the frame, defaults to 200
 function OneFrame:CreateBaseFrame(framename, width, height)
-	local frame = CreateFrame('Frame', framename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+    local frame = CreateFrame('Frame', framename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
     FrameHelpers:Embed(frame)
 
-	frame:SetToplevel(true)
-	frame:EnableMouse(true)
-	frame:SetMovable(true)
-	frame:RegisterForDrag("LeftButton")
+    frame:SetToplevel(true)
+    frame:EnableMouse(true)
+    frame:SetMovable(true)
+    frame:RegisterForDrag("LeftButton")
 
-	frame:SetBackdrop({
+    frame:SetBackdrop({
         bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
-        insets = {left = 5, right = 5, top = 5, bottom = 5},
+        insets = { left = 5, right = 5, top = 5, bottom = 5 },
     })
 
     frame:SetSize(width or 200, height or 200)
 
-	return frame
+    return frame
 end
 
 --- Creates a sidebar frame and attaches it to the given base frame.
@@ -199,9 +200,9 @@ end
 function OneFrame:CreateSideBar(framename, parent, width, height)
     local sidebar = self:CreateBaseFrame(framename, width or 60, height or 223)
 
-	sidebar:SetPosition({ parent=parent, attachAt="TOPRIGHT", attachTo="TOPLEFT" })
+    sidebar:SetPosition({ parent = parent, attachAt = "TOPRIGHT", attachTo = "TOPLEFT" })
 
-	return sidebar
+    return sidebar
 end
 
 --- Creates a highlight texture for a Button
@@ -209,8 +210,8 @@ function OneFrame:CreateButtonHighlight(button)
     local highlight = button:CreateTexture(nil, "OVERLAY")
 
     highlight:SetTexture("Interface\\Buttons\\CheckButtonHilight")
-	highlight:SetAllPoints(button)
-	highlight:SetBlendMode("ADD")
+    highlight:SetAllPoints(button)
+    highlight:SetBlendMode("ADD")
     highlight:Hide()
 
     return highlight
@@ -220,75 +221,75 @@ end
 -- @param framename the name of the frame, passed into CreateFrame
 -- @param moneyType the type of moneyframe to use on this frame.
 function OneFrame:CreateMainFrame(framename, moneyType)
-	local frame = self:CreateBaseFrame(framename)
+    local frame = self:CreateBaseFrame(framename)
 
-	frame.title = self:CreateFontString(frame)
-	frame.title:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -14)
+    frame.title = self:CreateFontString(frame)
+    frame.title:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -14)
 
-	frame.info = self:CreateFontString(frame, {r=1, g=1, b=0}, 11)
-	frame.info:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 8)
+    frame.info = self:CreateFontString(frame, { r = 1, g = 1, b = 0 }, 11)
+    frame.info:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 8)
 
-	frame.moneyframe = self:CreateSmallMoneyFrame("MoneyFrame", frame, moneyType)
-	frame.moneyframe:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 5, 7)
+    frame.moneyframe = self:CreateSmallMoneyFrame("MoneyFrame", frame, moneyType)
+    frame.moneyframe:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 5, 7)
 
-	-- Default Behaviors
-	tinsert(UISpecialFrames, frame:GetName())
-	frame:SetScript("OnDragStart", function(self)
-		if not self.handler.db.profile.behavior.locked then
+    -- Default Behaviors
+    tinsert(UISpecialFrames, frame:GetName())
+    frame:SetScript("OnDragStart", function()
+        if not self.handler.db.profile.behavior.locked then
             frame:StartMoving()
             frame.isMoving = true
 
             for _, slot in pairs(frame.slots) do
-				slot:EnableMouse(false)
-			end
+                slot:EnableMouse(false)
+            end
         end
-	end)
+    end)
 
-	frame:SetScript("OnDragStop", function()
-		frame:StopMovingOrSizing(self)
+    frame:SetScript("OnDragStop", function()
+        frame:StopMovingOrSizing(self)
         if frame.isMoving then
             frame.handler.db.profile.position = frame:GetPosition()
             frame.handler.db.profile.moved = true
             for _, slot in pairs(frame.slots) do
-				slot:EnableMouse(true)
-			end
+                slot:EnableMouse(true)
+            end
         end
         self.isMoving = false
-	end)
+    end)
 
-	local sidebarButton = CreateFrame('CheckButton', nil, frame)
-	sidebarButton:SetHeight(30)
-	sidebarButton:SetWidth(32)
+    local sidebarButton = CreateFrame('CheckButton', nil, frame)
+    sidebarButton:SetHeight(30)
+    sidebarButton:SetWidth(32)
 
-	sidebarButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 3, -7)
-	sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
-	sidebarButton:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down")
-	sidebarButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+    sidebarButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 3, -7)
+    sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
+    sidebarButton:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down")
+    sidebarButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
 
-	sidebarButton:SetScript("OnClick", function()
-		if sidebarButton:GetChecked() then
-			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
-			frame.sidebar:Show()
-		else
-			sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
-			frame.sidebar:Hide()
-		end
-	end)
+    sidebarButton:SetScript("OnClick", function()
+        if sidebarButton:GetChecked() then
+            sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up")
+            frame.sidebar:Show()
+        else
+            sidebarButton:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up")
+            frame.sidebar:Hide()
+        end
+    end)
 
-	frame.sidebarButton = sidebarButton
+    frame.sidebarButton = sidebarButton
 
-	local name = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	name:SetJustifyH("LEFT")
-	name:SetPoint("LEFT", sidebarButton, "RIGHT", 0, 0)
-	frame.name = name
+    local name = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    name:SetJustifyH("LEFT")
+    name:SetPoint("LEFT", sidebarButton, "RIGHT", 0, 0)
+    frame.name = name
 
     local closeButton = CreateFrame('Button', nil, frame, "UIPanelCloseButton")
     closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, -5)
     frame.closeButton = closeButton
 
-	local configButton = CreateFrame('Button', nil, frame)
-	configButton:SetHeight(32)
-	configButton:SetWidth(32)
+    local configButton = CreateFrame('Button', nil, frame)
+    configButton:SetHeight(32)
+    configButton:SetWidth(32)
 
     configButton:SetPoint("RIGHT", closeButton, "LEFT", 3, -2)
     configButton:SetNormalTexture("Interface\\Buttons\\UI-SquareButton-Up")
@@ -306,19 +307,19 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
     configButton:SetScript("OnMouseDown", function()
         local point, relativeTo, relativePoint, x, y = configButtonIcon:GetPoint(1);
-        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x-1, y-1);
+        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x - 1, y - 1);
     end)
 
     configButton:SetScript("OnMouseUp", function()
         local point, relativeTo, relativePoint, x, y = configButtonIcon:GetPoint(1);
-        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x+1, y+1);
+        configButtonIcon:SetPoint(point, relativeTo, relativePoint, x + 1, y + 1);
     end)
 
-	configButton:SetScript("OnClick", function()
-		frame.handler:OpenConfig()
-	end)
+    configButton:SetScript("OnClick", function()
+        frame.handler:OpenConfig()
+    end)
 
-	frame.configButton = configButton
+    frame.configButton = configButton
 
     if self.IsRetail then
         local sortButton = CreateFrame("Button", nil, frame, "BankAutoSortButtonTemplate")
@@ -343,7 +344,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
     searchbox:SetHeight(20)
     searchbox:SetWidth(110)
 
-    searchbox:SetPoint("RIGHT", sortButton, "LEFT", -2, 2)
+    searchbox:SetPoint("RIGHT", frame.sortButton or configButton, "LEFT", -2, 2)
 
     searchbox:SetScript('OnChar', BagSearch_OnChar)
 
@@ -358,7 +359,7 @@ function OneFrame:CreateMainFrame(framename, moneyType)
 
     frame.searchbox = searchbox
 
-	return frame
+    return frame
 end
 
 setup_embed_and_upgrade(OneFrame, "embedded", {

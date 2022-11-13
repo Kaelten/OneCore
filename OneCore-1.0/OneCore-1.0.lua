@@ -5,7 +5,7 @@ local _G = _G
 local LibStub = _G.LibStub
 
 local MAJOR, MINOR = "OneCore-1.0", tonumber("@project-timestamp@") or 9999
-local OneCore, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+local OneCore, _oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneCore then return end -- No Upgrade needed
 
@@ -16,8 +16,10 @@ OneCore.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 local _, k, v
 
 local bit, pairs, type, select = _G.bit, _G.pairs, _G.type, _G.select
-local CreateFrame, GetContainerNumFreeSlots, GetContainerItemLink = _G.CreateFrame, _G.GetContainerNumFreeSlots, _G.GetContainerItemLink
-local GetItemInfo, GetContainerItemInfo, SetItemButtonDesaturated = _G.GetItemInfo, _G.GetContainerItemInfo, _G.SetItemButtonDesaturated
+local CreateFrame, GetContainerNumFreeSlots, GetContainerItemLink = _G.CreateFrame, _G.GetContainerNumFreeSlots,
+	_G.GetContainerItemLink
+local GetItemInfo, GetContainerItemInfo, SetItemButtonDesaturated = _G.GetItemInfo, _G.GetContainerItemInfo,
+	_G.SetItemButtonDesaturated
 local ContainerFrame_Update, GetItemQualityColor = _G.ContainerFrame_Update, _G.GetItemQualityColor
 
 local SearchEngine = LibStub('LibItemSearch-1.2')
@@ -30,30 +32,30 @@ local SearchEngine = LibStub('LibItemSearch-1.2')
 -- @param mixins a table of what needs to be mixed in
 local function setup_embed_and_upgrade(lib, store, mixins)
 
-    if lib.embeded then
-        lib.embedded = lib.embeded
-        lib.embeded = nil
-    end
+	if lib.embeded then
+		lib.embedded = lib.embeded
+		lib.embeded = nil
+	end
 
-    lib[store] = lib[store] or {}
-    store = lib[store]
+	lib[store] = lib[store] or {}
+	store = lib[store]
 
-    local function Embed(self, target)
-        for k, v in pairs(mixins) do
-            if type(k) == "number" then
-                target[v] = self[v]
-            else
-                target[k] = type(v) == "string" and self[v] or v
-            end
-        end
-        store[target] = true
-    end
+	local function Embed(self, target)
+		for k, v in pairs(mixins) do
+			if type(k) == "number" then
+				target[v] = self[v]
+			else
+				target[k] = type(v) == "string" and self[v] or v
+			end
+		end
+		store[target] = true
+	end
 
-    lib.Embed = Embed
+	lib.Embed = Embed
 
-    for target, v in pairs(store) do
-       lib:Embed(target)
-    end
+	for target, _ in pairs(store) do
+		lib:Embed(target)
+	end
 end
 
 -- BAGTYPE_PROFESSION = Leather + Inscription + Herb + Enchanting + Engineering + Gem + Mining + Tackle Box + Cooking Bag
@@ -68,7 +70,7 @@ function BagHelpers:IsProfessionBag()
 end
 
 setup_embed_and_upgrade(BagHelpers, "bagEmbeded", {
-    "IsProfessionBag",
+	"IsProfessionBag",
 })
 
 
@@ -78,7 +80,7 @@ local SlotHelpers = {}
 function SlotHelpers:ShouldShow()
 	local bag = self:GetParent()
 
-    if bag:IsProfessionBag() and not self.handler.db.profile.show.profession then
+	if bag:IsProfessionBag() and not self.handler.db.profile.show.profession then
 		return false
 	end
 
@@ -86,20 +88,20 @@ function SlotHelpers:ShouldShow()
 end
 
 setup_embed_and_upgrade(SlotHelpers, "slotEmbeded", {
-    "ShouldShow",
+	"ShouldShow",
 })
 
 local blackholeMeta = {}
 
-function blackholeMeta:__newindex(...)
+function blackholeMeta:__newindex()
 
 end
 
-function blackholeMeta:__index(...)
-   return setmetatable({}, blackholeMeta)
+function blackholeMeta:__index()
+	return setmetatable({}, blackholeMeta)
 end
 
-function blackholeMeta:__call(...)
+function blackholeMeta:__call()
 
 end
 
@@ -107,16 +109,16 @@ end
 -- @param parent the parent frame for the bag
 -- @param id the bag's numeric id
 function OneCore:CreateBagFrame(parent, id)
-	local bag = CreateFrame("Frame", parent:GetName().."Bag"..id, parent)
+	local bag = CreateFrame("Frame", parent:GetName() .. "Bag" .. id, parent)
 	bag:SetID(id)
 
 	bag.meta = {}
 	bag.slots = {}
 	bag.handler = self
 
-    bag.FilterIcon = setmetatable({}, blackholeMeta)
+	bag.FilterIcon = setmetatable({}, blackholeMeta)
 
-    BagHelpers:Embed(bag)
+	BagHelpers:Embed(bag)
 
 	return bag
 end
@@ -131,21 +133,21 @@ function OneCore:CreateSlotFrame(parent, id)
 	if bagID == -1 then
 		slotType = "BankItemButtonGenericTemplate"
 	elseif bagID == -3 then
-        slotType = "ReagentBankItemButtonGenericTemplate"
-    end
+		slotType = "ReagentBankItemButtonGenericTemplate"
+	end
 
-    local frameType = self.IsRetail and "ItemButton" or "Button"
-	local slot = CreateFrame(frameType, parent:GetName().."Item"..id, parent, slotType)
+	local frameType = self.IsRetail and "ItemButton" or "Button"
+	local slot = CreateFrame(frameType, parent:GetName() .. "Item" .. id, parent, slotType)
 
 	slot:SetID(id)
-	slot:SetFrameLevel(parent:GetParent():GetFrameLevel()+5)
+	slot:SetFrameLevel(parent:GetParent():GetFrameLevel() + 5)
 
 	slot.meta = {}
 	slot.handler = self
 
 	parent.slots[id] = slot
 
-    SlotHelpers:Embed(slot)
+	SlotHelpers:Embed(slot)
 
 	return slot
 end
@@ -191,17 +193,18 @@ function OneCore:OrganizeFrame(force)
 
 	local cols, curCol, curRow, maxCol, justinc = self.forcedCols or self.db.profile.appearance.cols, 1, 1, 0, false
 
-	for slotkey, slot in pairs(self.frame.slots) do
+	for _slotKey, slot in pairs(self.frame.slots) do
 		slot:Hide()
 	end
 
-	for slotkey, slot in pairs(self:GetSlotOrder()) do
+	for _slotKey, slot in pairs(self:GetSlotOrder()) do
 		if type(slot) == 'string' or slot:ShouldShow() then
 			if slot.ClearAllPoints then
 				justinc = false
 				slot:ClearAllPoints()
-				slot:SetPoint("TOPLEFT", self.frame:GetName(), "TOPLEFT", self.leftBorder + self.colWidth * (curCol - 1), 0 - self.topBorder - (self.rowHeight * curRow))
-				slot:SetFrameLevel(self.frame:GetFrameLevel()+20)
+				slot:SetPoint("TOPLEFT", self.frame:GetName(), "TOPLEFT", self.leftBorder + self.colWidth * (curCol - 1),
+					0 - self.topBorder - (self.rowHeight * curRow))
+				slot:SetFrameLevel(self.frame:GetFrameLevel() + 20)
 				slot:Show()
 				curCol = curCol + 1
 			end
@@ -210,7 +213,7 @@ function OneCore:OrganizeFrame(force)
 				curCol = curCol + 1
 			end
 
-			maxCol = math.max(maxCol, curCol-1)
+			maxCol = math.max(maxCol, curCol - 1)
 
 			if (curCol > cols or slot == "NEWLINE") and not justinc then
 				curCol, curRow, justinc = 1, curRow + 1, true
@@ -237,33 +240,33 @@ function OneCore:UpdateBag(bag)
 	self:BuildFrame()
 	self:OrganizeFrame()
 
-    if not self.frame.bags[bag] then
-        return
-    end
+	if not self.frame.bags[bag] then
+		return
+	end
 
 	if not self.frame.bags[bag].colorLocked then
-		for slot=1, self.frame.bags[bag].size do
-            local slot = self:GetSlot(bag, slot)
+		for slotIndex = 1, self.frame.bags[bag].size do
+			local slot = self:GetSlot(bag, slotIndex)
 			self:ColorSlotBorder(slot)
 		end
 	end
 
-    if bag == -1 or bag == -3 then
-        for slot=1, self.frame.bags[bag].size do
-            BankFrameItemButton_Update(self:GetSlot(bag, slot))
-        end
-    else
-    	if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
-            ContainerFrame_Update(self.frame.bags[bag])
-            ContainerFrame_UpdateCooldowns(self.frame.bags[bag])
-    	end
-    end
+	if bag == -1 or bag == -3 then
+		for slot = 1, self.frame.bags[bag].size do
+			BankFrameItemButton_Update(self:GetSlot(bag, slot))
+		end
+	else
+		if self.frame.bags[bag].size and self.frame.bags[bag].size > 0 then
+			ContainerFrame_Update(self.frame.bags[bag])
+			ContainerFrame_UpdateCooldowns(self.frame.bags[bag])
+		end
+	end
 
-    for slot=1, self.frame.bags[bag].size do
-        local slot = self:GetSlot(bag, slot)
-        self:ColorSlotBorder(slot)
-        self:ApplySearchFilter(slot)
-    end
+	for slotIndex = 1, self.frame.bags[bag].size do
+		local slot = self:GetSlot(bag, slotIndex)
+		self:ColorSlotBorder(slot)
+		self:ApplySearchFilter(slot)
+	end
 end
 
 --- This updates all bags and their contents
@@ -273,25 +276,25 @@ function OneCore:UpdateFrame()
 	end
 
 	for _, childFrame in pairs(self.frame.childrenFrames) do
-	    if childFrame:IsVisible() and childFrame.handler and childFrame.handler.UpdateFrame then
-            childFrame.handler:UpdateFrame()
-        end
+		if childFrame:IsVisible() and childFrame.handler and childFrame.handler.UpdateFrame then
+			childFrame.handler:UpdateFrame()
+		end
 	end
 end
 
 function OneCore:UpdateFrameHeader()
-    if not self.IsRetail then
-        self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
-        return
-    end
+	if not self.IsRetail then
+		self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
+		return
+	end
 
-    if self.db.profile.appearance.showsort then
-        self.frame.sortButton:Show()
-        self.frame.searchbox:SetPoint("RIGHT", self.frame.sortButton, "LEFT", -2, 2)
-    else
-        self.frame.sortButton:Hide()
-        self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
-    end
+	if self.db.profile.appearance.showsort then
+		self.frame.sortButton:Show()
+		self.frame.searchbox:SetPoint("RIGHT", self.frame.sortButton, "LEFT", -2, 2)
+	else
+		self.frame.sortButton:Hide()
+		self.frame.searchbox:SetPoint("RIGHT", self.frame.configButton, "LEFT", 0, 2)
+	end
 end
 
 --- Helper function that returns a single slot
@@ -303,7 +306,7 @@ function OneCore:GetSlot(bag, slot)
 end
 
 local colorCache = {}
-local plain = {r = .05, g = .05, b = .05}
+local plain = { r = .05, g = .05, b = .05 }
 --- This will color the border of a single slot
 -- @param slot this is the slot frame to color
 -- @param fcolor this is the color table to use, is optional, defaults to {r = .05, g = .05, b = .05}
@@ -316,7 +319,7 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 		local border = slot:CreateTexture(nil, "OVERLAY")
 		border:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
 		border:SetBlendMode("ADD")
-        border:SetAlpha(.5)
+		border:SetAlpha(.5)
 
 		border:SetPoint('CENTER', slot, 'CENTER', 0, 1)
 		border:SetWidth(slot:GetWidth() * 2 - 5)
@@ -341,8 +344,8 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 				-- going with this method as it should never produce a point where I don't have a color to work with.
 				color = colorCache[rarity]
 				if not color then
-					local r, g, b, hex = GetItemQualityColor(rarity)
-					color = {r = r, g = g, b = b}
+					local r, g, b, _hex = GetItemQualityColor(rarity)
+					color = { r = r, g = g, b = b }
 					colorCache[rarity] = color --caching to prevent me from generating dozens of tables per pass
 				end
 			end
@@ -352,16 +355,16 @@ function OneCore:ColorSlotBorder(slot, fcolor)
 	local texture = slot:GetNormalTexture()
 	if self.db.profile.appearance.glow and color ~= plain then
 		texture:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
-        texture:SetBlendMode("ADD")
-        texture:SetAlpha(.8)
-        texture:SetPoint("CENTER", slot, "CENTER", 0, 1)
+		texture:SetBlendMode("ADD")
+		texture:SetAlpha(.8)
+		texture:SetPoint("CENTER", slot, "CENTER", 0, 1)
 
 		slot.border:Hide()
 		slot.glowing = true
 	elseif slot.glowing then
 		texture:SetTexture("Interface\\Buttons\\UI-Quickslot2")
 		texture:SetBlendMode("BLEND")
-        texture:SetPoint("CENTER", slot, "CENTER", 0, 0)
+		texture:SetPoint("CENTER", slot, "CENTER", 0, 0)
 		texture:SetAlpha(1)
 		texture:SetVertexColor(1, 1, 1)
 
@@ -377,11 +380,11 @@ end
 -- @param bagid the numeric id of the bag
 -- @param color the color to use when highlighting, optional
 function OneCore:ColorManySlotBorders(bagid, color)
-    if self.frame.bags and (bagid and not self.frame.bags[bagid]) then
-        return
-    end
+	if self.frame.bags and (bagid and not self.frame.bags[bagid]) then
+		return
+	end
 
-    for slotid = 1, self.frame.bags[bagid].size do
+	for slotid = 1, self.frame.bags[bagid].size do
 		self:ColorSlotBorder(self:GetSlot(bagid, slotid), color)
 	end
 end
@@ -389,7 +392,7 @@ end
 --- Used to highlight a bag's slots on mouseover
 -- @param bagid the numeric id of the bag
 function OneCore:HighlightBagSlots(bagid)
-    self:ColorManySlotBorders(bagid, self.db.profile.colors.mouseover)
+	self:ColorManySlotBorders(bagid, self.db.profile.colors.mouseover)
 end
 
 --- Used to unhighlight a bag's slots on mouseover
@@ -399,105 +402,105 @@ function OneCore:UnhighlightBagSlots(bagid)
 end
 
 function OneCore:OnSearch(term)
-    self.searchTerm = term;
-    self:UpdateFrame()
+	self.searchTerm = term;
+	self:UpdateFrame()
 end
 
 function OneCore:ApplySearchFilter(slot)
-    if self.searchTerm and #self.searchTerm > 1 then
-        local link = GetContainerItemLink(slot:GetParent():GetID(), slot:GetID())
-        if not link or SearchEngine:Matches(link, self.searchTerm) then
-            slot.searchOverlay:Hide()
-        else
-            self:ColorSlotBorder(slot, plain)
-            slot.searchOverlay:Show()
-        end
-    else
-        slot.searchOverlay:Hide()
-    end
+	if self.searchTerm and #self.searchTerm > 1 then
+		local link = GetContainerItemLink(slot:GetParent():GetID(), slot:GetID())
+		if not link or SearchEngine:Matches(link, self.searchTerm) then
+			slot.searchOverlay:Hide()
+		else
+			self:ColorSlotBorder(slot, plain)
+			slot.searchOverlay:Show()
+		end
+	else
+		slot.searchOverlay:Hide()
+	end
 end
 
 --- This function returns the order of slots
 function OneCore:GetSlotOrder()
-    for name, plugin in self:IterateActivePluginsByType('sorting') do
-        return plugin:GetSlotOrder()
-    end
+	for _name, plugin in self:IterateActivePluginsByType('sorting') do -- luacheck: ignore 512
+		return plugin:GetSlotOrder()
+	end
 
-    return {}
+	return {}
 end
 
 --- Sets up the plugin types
 function OneCore:InitializePluginSystem()
-    self:NewPluginType('sorting', 1, 1)
+	self:NewPluginType('sorting', 1, 1)
 
-    self.defaultSortPlugin = LibStub("OneSuite-SimpleSort-1.0"):LoadPluginForAddon(self)
+	self.defaultSortPlugin = LibStub("OneSuite-SimpleSort-1.0"):LoadPluginForAddon(self)
 end
 
 --- Replacement for GetContainerNumSlots
 function OneCore:GetContainerNumSlots(bagId)
-    return _G.GetContainerNumSlots(bagId)
+	return _G.GetContainerNumSlots(bagId)
 end
 
 --- Updates a slot's locked status.
 -- @param event the event fired
 -- @param bagid the numeric id of the bag
 -- @param slotid the numeric id of the slot
-function OneCore:UpdateItemLock(event, bagid, slotid)
-    if bagid == nil or slotid == nil then
-        return
-    end
+function OneCore:UpdateItemLock(_event, bagid, slotid)
+	if bagid == nil or slotid == nil then
+		return
+	end
 
-    local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bagid, slotid);
-    SetItemButtonDesaturated(self:GetSlot(bagid, slotid), locked, 0.5, 0.5, 0.5);
+	local _texture, _itemCount, locked, _quality, _readable = GetContainerItemInfo(bagid, slotid);
+	SetItemButtonDesaturated(self:GetSlot(bagid, slotid), locked, 0.5, 0.5, 0.5);
 end
 
 -- slight bastardization of the embed system, using this to setup a lot of static values on the object.
 -- It's important that anything included this way doesn't need to be upgraded, as embedding just forces these values.
 setup_embed_and_upgrade(OneCore, "embedded", {
-    "CreateBagFrame",
-    "CreateSlotFrame",
-    "BuildFrame",
-    "OrganizeFrame",
-    "UpdateBag",
-    "UpdateFrame",
-    "UpdateFrameHeader",
-    "OnSearch",
-    "GetSlot",
-    "ApplySearchFilter",
-    "ColorSlotBorder",
-    "ColorManySlotBorders",
-    "HighlightBagSlots",
-    "UnhighlightBagSlots",
-    "GetSlotOrder",
-    "InitializePluginSystem",
-    "GetContainerNumSlots",
-    "UpdateItemLock",
+	"CreateBagFrame",
+	"CreateSlotFrame",
+	"BuildFrame",
+	"OrganizeFrame",
+	"UpdateBag",
+	"UpdateFrame",
+	"UpdateFrameHeader",
+	"OnSearch",
+	"GetSlot",
+	"ApplySearchFilter",
+	"ColorSlotBorder",
+	"ColorManySlotBorders",
+	"HighlightBagSlots",
+	"UnhighlightBagSlots",
+	"GetSlotOrder",
+	"InitializePluginSystem",
+	"GetContainerNumSlots",
+	"UpdateItemLock",
 
-    colWidth = 39,
-    rowHeight = 39,
-    topBorder = 2,
-    bottomBorder = 30,
-    rightBorder = 5,
-    leftBorder = 8,
+	colWidth = 39,
+	rowHeight = 39,
+	topBorder = 2,
+	bottomBorder = 30,
+	rightBorder = 5,
+	leftBorder = 8,
 
-    bagIndexes = {},
+	bagIndexes = {},
 
-    stratas = {
-        "LOW",
-        "MEDIUM",
-        "HIGH",
-        "DIALOG",
-        "FULLSCREEN",
-        "FULLSCREEN_DIALOG",
-        "TOOLTIP",
-    },
+	stratas = {
+		"LOW",
+		"MEDIUM",
+		"HIGH",
+		"DIALOG",
+		"FULLSCREEN",
+		"FULLSCREEN_DIALOG",
+		"TOOLTIP",
+	},
 
-    defaults = {
+	defaults = {
 		profile = {
 			colors = {
-				mouseover = {r = 0, g = .7, b = 1, a = 1},
-				profession = {r = 1, g = 0, b = 1, a = 1},
-				background = {r = 0, g = 0, b = 0, a = .45},
+				mouseover = { r = 0, g = .7, b = 1, a = 1 },
+				profession = { r = 1, g = 0, b = 1, a = 1 },
+				background = { r = 0, g = 0, b = 0, a = .45 },
 			},
 			show = {
 				['*'] = true
@@ -509,7 +512,7 @@ setup_embed_and_upgrade(OneCore, "embedded", {
 				glow = false,
 				rarity = true,
 				white = false,
-                showsort = true,
+				showsort = true,
 			},
 			behavior = {
 				strata = 2,
