@@ -27,4 +27,5 @@ jobs:
 
       - name: Run Packager
         uses: BigWigsMods/packager@v2
-        args: -d
+        with:
+          args: -d
