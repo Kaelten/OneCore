@@ -1,12 +1,9 @@
-name: Package and Publish Addon
+name: Pull Requests
 
-on:
-  push:
-    branches: [main]
-    tags: [*]
+on: [pull_request]
 
 jobs:
-  check-and-publish:
+  check-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +21,14 @@ jobs:
       - name: package and deploy
         uses: BigWigsMods/packager@v2
         env:
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}          
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           # WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }} # don't upload onecore to wowi
+        with:
+          args: -d -z
+
+      - name: attach PR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: OneCore-PR${{ github.event.number }}-${{ github.sha }}
+          path: .release/
