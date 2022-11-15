@@ -6,7 +6,7 @@ local _G = _G
 local tonumber, pairs, type = _G.tonumber, _G.pairs, _G.type
 local LibStub = _G.LibStub
 
-local MAJOR, MINOR = "OneFrame-1.0", tonumber("@project-revision@") or 9999
+local MAJOR, MINOR = "OneFrame-1.0", tonumber("@project-timestamp@") or 9999
 local OneFrame, _oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneFrame then return end -- No Upgrade needed.

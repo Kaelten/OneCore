@@ -1,7 +1,7 @@
 --- '''OnePlugin-1.0''' provides a plugin framework built ontop of Ace3's Module system
 -- @class file
 -- @name OnePlugin-1.0.lua
-local MAJOR, MINOR = "OnePlugin-1.0", tonumber("@project-revision@") or 9999
+local MAJOR, MINOR = "OnePlugin-1.0", tonumber("@project-timestamp@") or 9999
 local OnePlugin, _oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OnePlugin then return end -- No Upgrade needed.

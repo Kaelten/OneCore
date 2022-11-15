@@ -6,7 +6,7 @@ local _G = _G
 local tonumber, type, pairs = _G.tonumber, _G.type, _G.pairs
 local LibStub = _G.LibStub
 
-local MAJOR, MINOR = "OneConfig-1.0", tonumber("@project-revision@") or 9999
+local MAJOR, MINOR = "OneConfig-1.0", tonumber("@project-timestamp@") or 9999
 local OneConfig, _ = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not OneConfig then return end -- No Upgrade needed.

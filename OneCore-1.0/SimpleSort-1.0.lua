@@ -1,7 +1,7 @@
 --- **OneSuite-SimpleSort-1.0** provides a simple sort plugin for the OneSuite
 -- @class file
 -- @name SimpleSort-1.0.lua
-local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", tonumber("@project-revision@") or 9999
+local MAJOR, MINOR = "OneSuite-SimpleSort-1.0", tonumber("@project-timestamp@") or 9999
 local SimpleSort, oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not SimpleSort then return end -- No Upgrade needed.
