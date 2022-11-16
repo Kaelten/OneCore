@@ -275,7 +275,6 @@ function OneCore:UpdateBag(bag)
 			if (itemIsUpgrade) then
 				slot.UpgradeIcon:Show()
 			end
-
 			-- ProfessionQualityOverlay Support kinda scuffed..
 			quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(containerInfo.hyperlink)
 			if not quality then
@@ -292,6 +291,9 @@ function OneCore:UpdateBag(bag)
 				slot.ProfessionQualityOverlay:Show()
 			end
 
+			if slot.ProfessionQualityOverlay and not quality then
+				slot.ProfessionQualityOverlay:Hide()
+			end
 			-- Bandaid cooldown fix start
 			local cooldown = _G[slot:GetName().."Cooldown"]
 			local start, duration, enable = C_Container.GetContainerItemCooldown(bag:GetID(), slot:GetID())
