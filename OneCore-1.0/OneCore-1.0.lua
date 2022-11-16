@@ -275,6 +275,23 @@ function OneCore:UpdateBag(bag)
 			if (itemIsUpgrade) then
 				slot.UpgradeIcon:Show()
 			end
+
+			-- ProfessionQualityOverlay Support kinda scuffed..
+			quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(containerInfo.hyperlink)
+			if not quality then
+				quality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(containerInfo.hyperlink)
+			end
+			if quality then
+				if not slot.ProfessionQualityOverlay then
+					slot.ProfessionQualityOverlay = slot:CreateTexture(nil, "OVERLAY");
+					slot.ProfessionQualityOverlay:SetPoint("TOPLEFT", -3, 2);
+					slot.ProfessionQualityOverlay:SetDrawLayer("OVERLAY", 7);
+				end
+				local atlas = ("Professions-Icon-Quality-Tier%d-Inv"):format(quality);
+				slot.ProfessionQualityOverlay:SetAtlas(atlas, TextureKitConstants.UseAtlasSize);
+				slot.ProfessionQualityOverlay:Show()
+			end
+
 			-- Bandaid cooldown fix start
 			local cooldown = _G[slot:GetName().."Cooldown"]
 			local start, duration, enable = C_Container.GetContainerItemCooldown(bag:GetID(), slot:GetID())
@@ -289,6 +306,9 @@ function OneCore:UpdateBag(bag)
 		else
 			if(slot.UpgradeIcon) then
 				slot.UpgradeIcon:Hide()
+			end
+			if (slot.ProfessionQualityOverlay) then
+				slot.ProfessionQualityOverlay:Hide()
 			end
 			-- Bandaid fix to remove item's previous location data when we drag it somewhere
 			_G[slot:GetName().."IconTexture"]:Hide()
