@@ -26,8 +26,7 @@ files["**/localization/*.lua"].ignore = {
 
 exclude_files = {
     -- don't scan external code
-    "**/externals",
-    "LibStub",
+    "OneCore-1.0/libs",
 
     -- only exists when testing packaging locally
     ".release",

@@ -5,6 +5,3 @@ enable-toc-creation: true
 externals:
   OneCore-1.0/libs/LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
   OneCore-1.0/libs/AceLocale-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceLocale-3.0
-  OneCore-1.0/libs/CustomSearch-1.0: https://github.com/Jaliborc/CustomSearch-1.0
-  OneCore-1.0/libs/Unfit-1.0: https://github.com/Jaliborc/Unfit-1.0
-  OneCore-1.0/libs/LibItemSearch-1.2: https://github.com/Jaliborc/LibItemSearch-1.2

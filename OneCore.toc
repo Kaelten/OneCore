@@ -10,7 +10,6 @@
 ## X-Website:  https://github.com/Kaelten/OneCore
 ## X-Date: @project-timestamp@
 ## Version: @project-version@
-## Deps: Ace3
+## OptionalDeps: Ace3
 
-LibStub\LibStub.lua
 OneCore-1.0\OneCore-1.0.xml
