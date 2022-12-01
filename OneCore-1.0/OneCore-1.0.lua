@@ -269,6 +269,33 @@ function OneCore:UpdateBag(bag)
 		local containerInfo = C_Container.GetContainerItemInfo(bag:GetID(), slot:GetID())
 		local itemIsUpgrade = PawnIsContainerItemAnUpgrade and PawnIsContainerItemAnUpgrade(bag:GetID(), slot:GetID())
 		if containerInfo then
+			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
+			itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
+			expacID, setID, isCraftingReagent = GetItemInfo(containerInfo.hyperlink)
+			if self.db.profile.appearance.showilvl then
+				if (itemLevel and ((classID == Enum.ItemClass.Armor) or (classID == Enum.ItemClass.Weapon))) then
+					if not slot.itemlevelDisplay then
+						slot.itemlevelDisplay = slot:CreateFontString(nil, "OVERLAY",  "GameFontHighlight")
+						slot.itemlevelDisplay:SetPoint("CENTER", 0, 0)
+					end
+					if itemQuality then
+						local qualityColor = ITEM_QUALITY_COLORS[itemQuality]
+						if (self.db.profile.appearance.qualitycolored) then
+							slot.itemlevelDisplay:SetTextColor(qualityColor.r, qualityColor.g, qualityColor.b, 1)
+						else
+							slot.itemlevelDisplay:SetTextColor(1, 1, 1, 1)
+						end
+					end
+					slot.itemlevelDisplay:SetText(itemLevel)
+					slot.itemlevelDisplay:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+					slot.itemlevelDisplay:Show()
+				end
+			end
+			if slot.itemlevelDisplay and not self.db.profile.appearance.showilvl then
+				slot.itemlevelDisplay:Hide()
+			end
+
+
 			slot:SetItemButtonTexture(containerInfo.iconFileID)
 			slot:SetItemButtonCount(containerInfo.stackCount)
 			-- Add Pawn Support
@@ -306,6 +333,10 @@ function OneCore:UpdateBag(bag)
 			SetItemButtonDesaturated(slot, containerInfo.isLocked, 0.5, 0.5)
 			-- Bandaid cooldown fix stop
 		else
+
+			if slot.itemlevelDisplay then
+				slot.itemlevelDisplay:Hide()
+			end
 			if(slot.UpgradeIcon) then
 				slot.UpgradeIcon:Hide()
 			end
